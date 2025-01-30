@@ -127,17 +127,22 @@ class COMPARE:
 
             elif operation == "DataFrame.compare":
                 with col3:
-                    file = col2.file_uploader("Upload another dataset", type=['csv'])
-                    align_axis = st.selectbox("Select Align Axis", [1, 0])
+                    file = st.file_uploader("Upload another dataset", type=['csv'])
+                    align_axis = st.selectbox("Select Align Axis", [1, 0])  # Axis: 1 for 'columns', 0 for 'index'
                     keep_shape = st.checkbox("Keep Shape", value=False)
                     keep_equal = st.checkbox("Keep Equal", value=False)
                     result_names = st.text_input("Enter Result Names (e.g., ('self', 'other'))")
 
                 with col2:
                     if file and result_names and st.button("Confirm", use_container_width=True, type='primary'):
-                        other_df = pd.read_csv(file)
                         try:
+                            # Read the uploaded file
+                            other_df = pd.read_csv(file)
+                            
+                            # Parse the result names as a tuple
                             result_names_tuple = eval(result_names)
+
+                            # Perform the comparison using pandas DataFrame.compare
                             result = self.dataframe.compare(
                                 other_df,
                                 align_axis=align_axis,
@@ -145,12 +150,13 @@ class COMPARE:
                                 keep_equal=keep_equal,
                                 result_names=result_names_tuple
                             )
-                            key = f"compare_with_uploaded_dataframe"
+
+                            # Save and display the result
+                            key = "compare_with_uploaded_dataframe"
                             st.session_state["allData"][key] = result
                             st.write(result)
                         except Exception as e:
                             st.error(f"Error: {e}")
-
         with tab2:
             if "allData" in st.session_state and st.session_state["allData"]:
                 selected_key = st.selectbox("Select a result to view", st.session_state["allData"].keys())
