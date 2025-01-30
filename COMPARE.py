@@ -25,19 +25,32 @@ class COMPARE:
                 if comparison_type == "Upload Other Dataset":
                     with col2:
                         file = st.file_uploader("Upload another dataset", type=['csv'])
-                        columns_to_select = st.multiselect("Select Columns for Comparison", options=self.dataframe.columns)
-                        
                         if file:
                             other_df = pd.read_csv(file)
-                            if columns_to_select:
+                            # Allow selection of columns for the uploaded dataset
+                            uploaded_columns_to_select = st.multiselect("Select Columns for Uploaded Dataset", options=other_df.columns)
+
+                            if uploaded_columns_to_select:
+                                # If columns are selected, show the columns to compare
+                                st.write(f"Selected columns from uploaded dataset: {uploaded_columns_to_select}")
+                            else:
+                                st.warning("Please select at least one column from the uploaded dataset for comparison.")
+
+                            # Allow selection of columns from the already read dataset
+                            columns_to_select = st.multiselect("Select Columns from Already Loaded Dataset", options=self.dataframe.columns)
+
+                            if columns_to_select and uploaded_columns_to_select:
+                                # Extract subdatasets based on selected columns
                                 sub_df = self.dataframe[columns_to_select]
+                                sub_other_df = other_df[uploaded_columns_to_select]
+
                                 if st.button("Confirm", use_container_width=True, type='primary'):
-                                    result = getattr(sub_df, operation.split('.')[-1])(other_df[columns_to_select], axis=axis)
-                                    key = f"{operation.split('.')[-1]}_with_other_dataframe_on_selected_columns"
+                                    result = getattr(sub_df, operation.split('.')[-1])(sub_other_df, axis=axis)
+                                    key = f"{operation.split('.')[-1]}_with_uploaded_dataset_on_selected_columns"
                                     st.session_state["allData"][key] = result
                                     st.write(result)
                             else:
-                                st.warning("Please select at least one column for comparison.")
+                                st.warning("Please select at least one column from both datasets for comparison.")
 
                 elif comparison_type == "Enter Values to Compare":
                     with col2:
@@ -86,29 +99,35 @@ class COMPARE:
                     result_names = st.text_input("Enter Result Names (e.g., ('self', 'other'))")
 
                 with col2:
-                    columns_to_select = st.multiselect("Select Columns for Comparison", options=self.dataframe.columns)
-                    
-                    if file and result_names and st.button("Confirm", use_container_width=True, type='primary'):
+                    # Allow selection of columns for the uploaded dataset
+                    uploaded_columns_to_select = st.multiselect("Select Columns from Uploaded Dataset", options=self.dataframe.columns)
+                    if file:
                         other_df = pd.read_csv(file)
-                        
-                        if columns_to_select:
+
+                    # Allow selection of columns from the already read dataset
+                    columns_to_select = st.multiselect("Select Columns from Already Loaded Dataset", options=self.dataframe.columns)
+
+                    if file and result_names and st.button("Confirm", use_container_width=True, type='primary'):
+                        if uploaded_columns_to_select and columns_to_select:
                             sub_df = self.dataframe[columns_to_select]
+                            sub_other_df = other_df[uploaded_columns_to_select]
+
                             try:
                                 result_names_tuple = eval(result_names)
                                 result = sub_df.compare(
-                                    other_df[columns_to_select],
+                                    sub_other_df,
                                     align_axis=align_axis,
                                     keep_shape=keep_shape,
                                     keep_equal=keep_equal,
                                     result_names=result_names_tuple
                                 )
-                                key = f"compare_with_other_dataframe_on_selected_columns"
+                                key = f"compare_with_uploaded_dataframe_on_selected_columns"
                                 st.session_state["allData"][key] = result
                                 st.write(result)
                             except Exception as e:
                                 st.error(f"Error: {e}")
                         else:
-                            st.warning("Please select at least one column for comparison.")
+                            st.warning("Please select at least one column from both datasets for comparison.")
 
         with tab2:
             if "allData" in st.session_state and st.session_state["allData"]:
