@@ -127,7 +127,7 @@ class COMPARE:
 
             elif operation == "DataFrame.compare":
                 with col3:
-                    file = st.file_uploader("Upload another dataset", type=['csv'])
+                    file = col2.file_uploader("Upload another dataset", type=['csv'])
                     align_axis = st.selectbox("Select Align Axis", [1, 0])  # Axis: 1 for 'columns', 0 for 'index'
                     keep_shape = st.checkbox("Keep Shape", value=False)
                     keep_equal = st.checkbox("Keep Equal", value=False)
