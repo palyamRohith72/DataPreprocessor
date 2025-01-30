@@ -22,7 +22,7 @@ with st.sidebar:
     options = option_menu(
         "Select the operation to perform",
         ["Attributes", "Compare DataFrames", "Merge & Join", "Update DataFrames", "Add & Delete", "Access & Modify Data", "Plot Data"],
-        icons=["info-circle", "columns", "arrows-merge", "pencil-square", "trash", "tools", "chart-bar"],
+        icons=["info-circle", "columns", "pen", "pencil-square", "trash", "tools", "chart"],
         menu_icon='gear',
         default_index=0
     )
