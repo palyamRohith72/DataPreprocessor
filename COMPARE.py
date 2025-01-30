@@ -39,8 +39,16 @@ class COMPARE:
                         if input_values and st.button("Confirm", use_container_width=True, type='primary'):
                             try:
                                 # Split and evaluate the input values
-                                values = [eval(value.strip()) for value in input_values.split(',')]
-                                
+                                values=[]
+                                for value in input_values.split(','):
+                                    if value.isalnum():
+                                        values.append(value.strip())
+                                    elif value.isdigit():
+                                        values.append(int(value.strip()))
+                                    elif value.isnumeric():
+                                        values.append(float(value.strip()))
+                                    else:
+                                        values.append(value.strip())         
                                 # Handle single value broadcasting
                                 if len(values) == 1:
                                     values = values[0]
