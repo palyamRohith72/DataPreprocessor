@@ -25,13 +25,19 @@ class COMPARE:
                 if comparison_type == "Upload Other Dataset":
                     with col2:
                         file = st.file_uploader("Upload another dataset", type=['csv'])
+                        columns_to_select = st.multiselect("Select Columns for Comparison", options=self.dataframe.columns)
+                        
                         if file:
                             other_df = pd.read_csv(file)
-                            if st.button("Confirm", use_container_width=True, type='primary'):
-                                result = getattr(self.dataframe, operation.split('.')[-1])(other_df, axis=axis)
-                                key = f"{operation.split('.')[-1]}_with_other_dataframe"
-                                st.session_state["allData"][key] = result
-                                st.write(result)
+                            if columns_to_select:
+                                sub_df = self.dataframe[columns_to_select]
+                                if st.button("Confirm", use_container_width=True, type='primary'):
+                                    result = getattr(sub_df, operation.split('.')[-1])(other_df[columns_to_select], axis=axis)
+                                    key = f"{operation.split('.')[-1]}_with_other_dataframe_on_selected_columns"
+                                    st.session_state["allData"][key] = result
+                                    st.write(result)
+                            else:
+                                st.warning("Please select at least one column for comparison.")
 
                 elif comparison_type == "Enter Values to Compare":
                     with col2:
@@ -39,7 +45,7 @@ class COMPARE:
                         if input_values and st.button("Confirm", use_container_width=True, type='primary'):
                             try:
                                 # Split and evaluate the input values
-                                values=[]
+                                values = []
                                 for value in input_values.split(','):
                                     if value.isalnum():
                                         values.append(value.strip())
@@ -62,7 +68,7 @@ class COMPARE:
                                 
                                 # Perform the comparison
                                 result = getattr(self.dataframe, operation.split('.')[-1])(values, axis=axis)
-                                key = f"{operation.split('.')[-1]}_with_values"
+                                key = f"{operation.split('.')[-1]}_with_values_on_selected_columns"
                                 
                                 # Save and display the result
                                 st.session_state["allData"][key] = result
@@ -80,22 +86,29 @@ class COMPARE:
                     result_names = st.text_input("Enter Result Names (e.g., ('self', 'other'))")
 
                 with col2:
+                    columns_to_select = st.multiselect("Select Columns for Comparison", options=self.dataframe.columns)
+                    
                     if file and result_names and st.button("Confirm", use_container_width=True, type='primary'):
                         other_df = pd.read_csv(file)
-                        try:
-                            result_names_tuple = eval(result_names)
-                            result = self.dataframe.compare(
-                                other_df,
-                                align_axis=align_axis,
-                                keep_shape=keep_shape,
-                                keep_equal=keep_equal,
-                                result_names=result_names_tuple
-                            )
-                            key = f"compare_with_other_dataframe"
-                            st.session_state["allData"][key] = result
-                            st.write(result)
-                        except Exception as e:
-                            st.error(f"Error: {e}")
+                        
+                        if columns_to_select:
+                            sub_df = self.dataframe[columns_to_select]
+                            try:
+                                result_names_tuple = eval(result_names)
+                                result = sub_df.compare(
+                                    other_df[columns_to_select],
+                                    align_axis=align_axis,
+                                    keep_shape=keep_shape,
+                                    keep_equal=keep_equal,
+                                    result_names=result_names_tuple
+                                )
+                                key = f"compare_with_other_dataframe_on_selected_columns"
+                                st.session_state["allData"][key] = result
+                                st.write(result)
+                            except Exception as e:
+                                st.error(f"Error: {e}")
+                        else:
+                            st.warning("Please select at least one column for comparison.")
 
         with tab2:
             if "allData" in st.session_state and st.session_state["allData"]:
