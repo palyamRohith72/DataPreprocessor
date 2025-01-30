@@ -27,26 +27,11 @@ class COMPARE:
                         file = st.file_uploader("Upload another dataset", type=['csv'])
                         if file:
                             other_df = pd.read_csv(file)
-                            # Allow user to input columns from uploaded dataset
-                            uploaded_columns = st.text_input("Enter columns for the uploaded dataset (comma-separated):")
-                            uploaded_columns_list = [col.strip() for col in uploaded_columns.split(',')] if uploaded_columns else []
-
-                            # Allow user to input columns from the already loaded dataset
-                            columns = st.text_input("Enter columns from the already loaded dataset (comma-separated):")
-                            columns_list = [col.strip() for col in columns.split(',')] if columns else []
-
-                            if uploaded_columns_list and columns_list:
-                                # Extract subdatasets based on selected columns
-                                sub_df = self.dataframe[columns_list]
-                                sub_other_df = other_df[uploaded_columns_list]
-
-                                if st.button("Confirm", use_container_width=True, type='primary'):
-                                    result = getattr(sub_df, operation.split('.')[-1])(sub_other_df)
-                                    key = f"{operation.split('.')[-1]}_with_uploaded_dataset_on_selected_columns"
-                                    st.session_state["allData"][key] = result
-                                    st.write(result)
-                            else:
-                                st.warning("Please enter columns for both the datasets for comparison.")
+                            if st.button("Confirm", use_container_width=True, type='primary'):
+                                result = getattr(self.dataframe, operation.split('.')[-1])(other_df)
+                                key = f"{operation.split('.')[-1]}_with_uploaded_dataset"
+                                st.session_state["allData"][key] = result
+                                st.write(result)
 
                 elif comparison_type == "Enter Values to Compare":
                     with col2:
@@ -77,7 +62,7 @@ class COMPARE:
                                 
                                 # Perform the comparison
                                 result = getattr(self.dataframe, operation.split('.')[-1])(values)
-                                key = f"{operation.split('.')[-1]}_with_values_on_selected_columns"
+                                key = f"{operation.split('.')[-1]}_with_values"
                                 
                                 # Save and display the result
                                 st.session_state["allData"][key] = result
@@ -96,25 +81,11 @@ class COMPARE:
                         file = st.file_uploader("Upload another dataset", type=['csv'])
                         if file:
                             other_df = pd.read_csv(file)
-                            # Allow user to select columns from uploaded dataset using multi-select
-                            uploaded_columns = st.multiselect("Select columns from the uploaded dataset", options=other_df.columns)
-                            
-                            # Allow user to input columns from the already loaded dataset
-                            columns = st.text_input("Enter columns from the already loaded dataset (comma-separated):")
-                            columns_list = [col.strip() for col in columns.split(',')] if columns else []
-
-                            if uploaded_columns and columns_list:
-                                # Extract subdatasets based on selected columns
-                                sub_df = self.dataframe[columns_list]
-                                sub_other_df = other_df[uploaded_columns]
-
-                                if st.button("Confirm", use_container_width=True, type='primary'):
-                                    result = getattr(sub_df, operation.split('.')[-1])(sub_other_df, axis=axis)
-                                    key = f"{operation.split('.')[-1]}_with_uploaded_dataset_on_selected_columns"
-                                    st.session_state["allData"][key] = result
-                                    st.write(result)
-                            else:
-                                st.warning("Please select columns for both the datasets for comparison.")
+                            if st.button("Confirm", use_container_width=True, type='primary'):
+                                result = getattr(self.dataframe, operation.split('.')[-1])(other_df, axis=axis)
+                                key = f"{operation.split('.')[-1]}_with_uploaded_dataset"
+                                st.session_state["allData"][key] = result
+                                st.write(result)
 
                 elif comparison_type == "Enter Values to Compare":
                     with col2:
@@ -145,7 +116,7 @@ class COMPARE:
                                 
                                 # Perform the comparison
                                 result = getattr(self.dataframe, operation.split('.')[-1])(values, axis=axis)
-                                key = f"{operation.split('.')[-1]}_with_values_on_selected_columns"
+                                key = f"{operation.split('.')[-1]}_with_values"
                                 
                                 # Save and display the result
                                 st.session_state["allData"][key] = result
@@ -163,38 +134,22 @@ class COMPARE:
                     result_names = st.text_input("Enter Result Names (e.g., ('self', 'other'))")
 
                 with col2:
-                    # Allow user to input columns from the uploaded dataset
-                    uploaded_columns = st.text_input("Enter columns for the uploaded dataset (comma-separated):")
-                    uploaded_columns_list = [col.strip() for col in uploaded_columns.split(',')] if uploaded_columns else []
-
-                    if file:
-                        other_df = pd.read_csv(file)
-
-                    # Allow user to input columns from the already loaded dataset
-                    columns = st.text_input("Enter columns from the already loaded dataset (comma-separated):")
-                    columns_list = [col.strip() for col in columns.split(',')] if columns else []
-
                     if file and result_names and st.button("Confirm", use_container_width=True, type='primary'):
-                        if uploaded_columns_list and columns_list:
-                            sub_df = self.dataframe[columns_list]
-                            sub_other_df = other_df[uploaded_columns_list]
-
-                            try:
-                                result_names_tuple = eval(result_names)
-                                result = sub_df.compare(
-                                    sub_other_df,
-                                    align_axis=align_axis,
-                                    keep_shape=keep_shape,
-                                    keep_equal=keep_equal,
-                                    result_names=result_names_tuple
-                                )
-                                key = f"compare_with_uploaded_dataframe_on_selected_columns"
-                                st.session_state["allData"][key] = result
-                                st.write(result)
-                            except Exception as e:
-                                st.error(f"Error: {e}")
-                        else:
-                            st.warning("Please enter columns for both datasets for comparison.")
+                        other_df = pd.read_csv(file)
+                        try:
+                            result_names_tuple = eval(result_names)
+                            result = self.dataframe.compare(
+                                other_df,
+                                align_axis=align_axis,
+                                keep_shape=keep_shape,
+                                keep_equal=keep_equal,
+                                result_names=result_names_tuple
+                            )
+                            key = f"compare_with_uploaded_dataframe"
+                            st.session_state["allData"][key] = result
+                            st.write(result)
+                        except Exception as e:
+                            st.error(f"Error: {e}")
 
         with tab2:
             if "allData" in st.session_state and st.session_state["allData"]:
