@@ -35,16 +35,28 @@ class COMPARE:
 
                 elif comparison_type == "Enter Values to Compare":
                     with col2:
-                        input_values = st.text_input("Enter comma-separated values (equal to column length or a single value):")
+                        input_values = st.text_input("Enter comma-separated values (equal to column length or only one value):")
                         if input_values and st.button("Confirm", use_container_width=True, type='primary'):
                             values = input_values.split(',')
-                            if len(values) == len(self.dataframe.columns) or len(values) == 1:
+                            try:
+                                # Handle single value broadcasting
+                                if len(values) == 1:
+                                    values = values[0]
+                                # Handle multiple values comparison
+                                elif len(values) == len(self.dataframe.columns) and axis == "columns":
+                                    values = pd.Series(values, index=self.dataframe.columns)
+                                elif len(values) == len(self.dataframe.index) and axis == "index":
+                                    values = pd.Series(values, index=self.dataframe.index)
+                                else:
+                                    raise ValueError("Invalid number of values provided.")
+                                
                                 result = getattr(self.dataframe, operation.split('.')[-1])(values, axis=axis)
                                 key = f"{operation.split('.')[-1]}_with_values"
                                 st.session_state["allData"][key] = result
                                 st.write(result)
-                            else:
-                                st.error("Total values must be equal to the column length or only one value.")
+                            except Exception as e:
+                                st.error(f"Error: {e}")
+
 
             elif operation == "DataFrame.compare":
                 with col3:
