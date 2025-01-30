@@ -2,6 +2,7 @@ import streamlit as st
 from streamlit_option_menu import option_menu
 import pandas as pd
 from ATTRIBUTES import ATTRIBUTES
+from COMPARE import COMPARE
 
 # Initialize session state for storing dataframes
 if "allData" not in st.session_state:
@@ -35,8 +36,10 @@ if options == "Attributes":
         attributes.display()
 
 elif options == "Compare DataFrames":
-    st.write("Feature coming soon: Compare DataFrames")
-
+    if selected_data:
+        df = st.session_state["allData"][selected_data]
+        compare = COMPARE(df)
+        compare.display()
 elif options == "Merge & Join":
     st.write("Feature coming soon: Merge & Join DataFrames")
 
