@@ -37,8 +37,10 @@ class COMPARE:
                     with col2:
                         input_values = st.text_input("Enter comma-separated values (equal to column length or only one value):")
                         if input_values and st.button("Confirm", use_container_width=True, type='primary'):
-                            values = input_values.split(',')
                             try:
+                                # Split and evaluate the input values
+                                values = [eval(value.strip()) for value in input_values.split(',')]
+                                
                                 # Handle single value broadcasting
                                 if len(values) == 1:
                                     values = values[0]
@@ -48,10 +50,13 @@ class COMPARE:
                                 elif len(values) == len(self.dataframe.index) and axis == "index":
                                     values = pd.Series(values, index=self.dataframe.index)
                                 else:
-                                    raise ValueError("Invalid number of values provided.")
+                                    raise ValueError("Invalid number of values provided. Ensure the values match the column or index length.")
                                 
+                                # Perform the comparison
                                 result = getattr(self.dataframe, operation.split('.')[-1])(values, axis=axis)
                                 key = f"{operation.split('.')[-1]}_with_values"
+                                
+                                # Save and display the result
                                 st.session_state["allData"][key] = result
                                 st.write(result)
                             except Exception as e:
