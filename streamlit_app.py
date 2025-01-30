@@ -8,7 +8,7 @@ if "allData" not in st.session_state:
     st.session_state["allData"] = {}
 
 # File uploader for CSV files
-st.title("Data Preprocessor",divider='blue')
+st.header("Data Preprocessor",divider='blue')
 dataframe = st.sidebar.file_uploader("Upload file", type=['csv'])
 if dataframe:
     if "readed_csv" not in st.session_state["allData"]:
