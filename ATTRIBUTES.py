@@ -43,9 +43,7 @@ class ATTRIBUTES:
             elif selected_operation == "DataFrame.dtypes":
                 col2.write(self.dataframe.dtypes)
             elif selected_operation == "DataFrame.info":
-                buffer = []
-                self.dataframe.info(buf=buffer)
-                col2.text("\n".join(buffer))
+                col2.write(self.dataframe.info())
             elif selected_operation == "DataFrame.select_dtypes":
                 # Display available datatypes in a multiselect
                 available_dtypes = list(self.dataframe.dtypes.unique())
