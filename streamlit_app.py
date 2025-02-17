@@ -3,7 +3,7 @@ from streamlit_option_menu import option_menu
 import pandas as pd
 from ATTRIBUTES import ATTRIBUTES
 from COMPARE import COMPARE
-from accessModify import AccessModify
+from accessModify import *
 
 # Initialize session state for storing dataframes
 if "allData" not in st.session_state:
