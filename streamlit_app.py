@@ -3,6 +3,7 @@ from streamlit_option_menu import option_menu
 import pandas as pd
 from ATTRIBUTES import ATTRIBUTES
 from COMPARE import COMPARE
+from accessModify import AccessModify
 
 # Initialize session state for storing dataframes
 if "allData" not in st.session_state:
@@ -50,7 +51,11 @@ elif options == "Add & Delete":
     st.write("Feature coming soon: Add & Delete Rows/Columns")
 
 elif options == "Access & Modify Data":
-    st.write("Feature coming soon: Access & Modify Data")
+    if selected_data:
+        df = st.session_state["allData"][selected_data]
+        compare = AccessModify(df)
+        compare.display()
+    
 
 elif options == "Plot Data":
     st.write("Feature coming soon: Plot Data")
