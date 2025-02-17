@@ -5,7 +5,7 @@ import seaborn
 
 class AccessModify:
   def __init__(self,df):
-    self.data=df
+    self.df=df
   def display(self):
     tab1,tab2=st.tabs(['Perform Operations','View Your Results'])
     with tab1:
