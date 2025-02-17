@@ -21,7 +21,7 @@ class AccessModify:
             if options == 'Access Data':
                 self.access_data(col1, col2)
             elif options == 'Access Data (Advanced)':
-                st.warning("Feature not implemented yet.")
+                self.access_data_advanced(col1,col2)
             elif options == 'Modify Values':
                 st.warning("Feature not implemented yet.")
             elif options == 'Modify Values (Advanced)':
@@ -156,4 +156,99 @@ class AccessModify:
     
             except Exception as e:
                 col2.warning(f"Error: {e}")
-                
+    def access_data_advanced(col1,col2):
+        col2.subheader("Please select an option",divider='green')
+        options=col2.radio("Options",["Desired Rows And Columns","Portion Of Rows And Columns","Trucante Data","Boolean Conditions"])
+        if options=="Desired Rows And Columns":
+            self.desired_rows_and_columns(col2)
+        if options=="Portion of Rows And Columns":
+            self.portion_rows_and_columns(col2)
+        if options=="Truncate Data":
+            self.truncate_data(col2)
+        if options=="Boolean Conditions":
+            self.boolean_conditions(col2)
+    def desired_rows_and_columns(self, col2):
+        col2.subheader("Give Inputs", divider='blue')
+        rows_options = col2.selectbox("Type Of Row Selection", ["Continuous Rows ['Slicing']", "Desired Rows"])
+        columns_options = col2.selectbox("Type Of Column Selection", ["All Columns", "Specific Columns"])
+    
+        if rows_options == "Continuous Rows ['Slicing']":
+            start_index = col2.number_input("Start Index for Slicing", min_value=0, max_value=len(self.df) - 1, value=0)
+            end_index = col2.number_input("End Index for Slicing", min_value=0, max_value=len(self.df), value=len(self.df))
+            selected_rows = slice(start_index, end_index)
+        else:
+            selected_rows = col2.multiselect("Select the desired indexes", list(self.df.index))
+            if not selected_rows:
+                col2.warning("You must select at least one row.")
+                return
+    
+        if columns_options == "All Columns":
+            selected_columns = self.df.columns
+        else:
+            selected_columns = col2.multiselect("Select the columns", list(self.df.columns))
+            if not selected_columns:
+                col2.warning("You must select at least one column.")
+                return
+    
+        if col2.button("Fix to extract", use_container_width=True, type='primary'):
+            selected_data = self.df.loc[selected_rows, selected_columns]
+            key = f"Stage - Access & Modify (Advanced) = Desired Rows ({selected_rows}), Columns ({selected_columns})"
+            st.session_state["allData"][key] = selected_data
+            col2.subheader("Your Results", divider='grey')
+            col2.dataframe(selected_data)
+    
+    
+    def portion_rows_and_columns(self, col2):
+        col2.subheader("Extract a portion of rows first", divider='blue')
+        sample_size = col2.slider("Select sample size", 1, len(self.df))
+    
+        sample_data = self.df.sample(sample_size)
+    
+        columns_options = col2.selectbox("Type Of Column Selection", ["All Columns", "Specific Columns"])
+        if columns_options == "All Columns":
+            selected_data = sample_data
+        else:
+            selected_columns = col2.multiselect("Select the columns", list(sample_data.columns))
+            if not selected_columns:
+                col2.warning("You must select at least one column.")
+                return
+            selected_data = sample_data[selected_columns]
+    
+        if col2.button("Fix to extract", use_container_width=True, type='primary'):
+            key = f"Stage - Access & Modify (Advanced) = Portion Rows ({sample_size}), Columns ({selected_columns if columns_options != 'All Columns' else 'All'})"
+            st.session_state["allData"][key] = selected_data
+            col2.subheader("Your Results", divider='grey')
+            col2.dataframe(selected_data)
+    
+    
+    def truncate_data(self, col2):
+        col2.subheader("Truncate Data", divider='blue')
+        before_index = col2.text_input("Truncate before index (leave blank for none)", "")
+        after_index = col2.text_input("Truncate after index (leave blank for none)", "")
+    
+        if col2.button("Apply Truncate", use_container_width=True, type='primary'):
+            try:
+                selected_data = self.df.truncate(before=before_index if before_index else None, 
+                                                 after=after_index if after_index else None)
+                key = f"Stage - Access & Modify (Advanced) = Truncated before {before_index}, after {after_index}"
+                st.session_state["allData"][key] = selected_data
+                col2.subheader("Your Results", divider='grey')
+                col2.dataframe(selected_data)
+            except Exception as e:
+                col2.warning(f"Error: {e}")
+    
+    
+    def boolean_conditions(self, col2):
+        col2.subheader("Apply Boolean Conditions", divider='blue')
+        column_selected = col2.selectbox("Select a column", list(self.df.columns))
+        condition = col2.text_input("Enter a condition (e.g., > 50, == 'value')")
+    
+        if col2.button("Apply Condition", use_container_width=True, type='primary'):
+            try:
+                selected_data = self.df.query(f"{column_selected} {condition}")
+                key = f"Stage - Access & Modify (Advanced) = Boolean Condition on {column_selected} ({condition})"
+                st.session_state["allData"][key] = selected_data
+                col2.subheader("Your Results", divider='grey')
+                col2.dataframe(selected_data)
+            except Exception as e:
+                col2.warning(f"Error: {e}")
