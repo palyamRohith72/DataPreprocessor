@@ -48,7 +48,7 @@ class AccessModify:
         elif options == 'Access Sample Data':
             self.access_sample_data(col2)
         elif options == 'Access Filtered Data':
-            st.warning("Feature not implemented yet.")
+            self.access_filtered_data(col2)
 
     def access_first_n_rows(self, col2):
         col2.subheader("Provide input for selected option", divider='green')
@@ -112,3 +112,24 @@ class AccessModify:
             
             col2.subheader("Your Results", divider='grey')
             col2.dataframe(selected_data)
+    # pass
+    def access_filtered_data(self,col2):
+        col2.subheader("Pass Input for the selected option")
+        axis=col2.selectbox("Specify the axis",['index','columns'])
+        if axis=='index':
+            self.selected_items=["All Rows/Columns"] + list(self.df.index)
+        else:
+            self.selected_items=["All Rows/Columns"]+list(self.df.columns)
+        items=col2.multiselect("Please select the rows or columns",self.selected_items)
+        regex=col2.text_input("You can specify the rezex patterns")
+        like=col2.text_input("Please select the pattern to identify. For example pattern for records that contain rabbit may be 'rab,'rabbit' etc. In simple terms a simple substring")
+        if not like:
+            like=None
+        if not regex:
+            regex=None
+        if col2.button("Fix My Settings For This Filter", use_container_width=True, type='primary'):
+            try:
+                selectedData=self.df.filter(items=items,axis=axis,like=like,regex=regex)
+            except Exception as e:
+                col2.warning(e)
+            
