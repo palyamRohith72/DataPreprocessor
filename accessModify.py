@@ -1,6 +1,6 @@
 import streamlit as st
 import pandas as pd
-from streamlit_extras.metric_cards import metric_card
+from streamlit_extras.metric_cards import *
 import seaborn as sns
 
 class AccessModify:
