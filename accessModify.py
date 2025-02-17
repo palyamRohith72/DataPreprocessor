@@ -21,7 +21,7 @@ class AccessModify:
             if options == 'Access Data':
                 self.access_data(col1, col2)
             elif options == 'Access Data (Advanced)':
-                self.access_data_advanced(col1,col2)
+                self.access_data_advanced(col2)
             elif options == 'Modify Values':
                 st.warning("Feature not implemented yet.")
             elif options == 'Modify Values (Advanced)':
