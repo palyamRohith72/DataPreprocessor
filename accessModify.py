@@ -25,7 +25,7 @@ class AccessModify:
     if options=='Access first n rows':
       col2.subheader("Provide input for selected Option",divider='green')
       slider=col2.slider("Drag To Select Number Of Rows",1,self.df.shape[0])
-      columns=col2.multiselect("Select the columns",["All Columns"]+self.df.columns)
+      columns=col2.multiselect("Select the columns",["All Columns"].extend(self.df.columns))
       if col2.button("Fix My Settings",use_container_width=True,type='primary'):
         if slider and columns:
           if len(columns)==1 and "All Columns" in columns:
