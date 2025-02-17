@@ -93,7 +93,7 @@ class AddDelete:
             
             if rows and col2.button("Delete Selected Rows", use_container_width=True, type="primary"):
                 dataframe=self.data.drop(index=rows, axis=0)
-                st.session_state["allData"]["Stage - Add & Delete - Delete Rows"] = datafarme
+                st.session_state["allData"]["Stage - Add & Delete - Delete Rows"] = dataframe
                 col2.dataframe(dataframe)
 
         elif options == "Delete Duplicated Rows":
