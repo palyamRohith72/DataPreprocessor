@@ -16,7 +16,7 @@ class AccessModify:
             col1, col2 = st.columns([1, 2],border=True)
             
             options = col1.radio("Please select the operation that you want to perform", 
-                                ['Access Data', 'Access Data (Advanced)', 'Modify Values', 'Modify Values (Advanced)'])
+                                ['Access Data', 'Access Data (Advanced)'])
             
             if options == 'Access Data':
                 self.access_data(col1, col2)
