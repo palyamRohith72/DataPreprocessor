@@ -113,23 +113,47 @@ class AccessModify:
             col2.subheader("Your Results", divider='grey')
             col2.dataframe(selected_data)
     # pass
-    def access_filtered_data(self,col2):
-        col2.subheader("Pass Input for the selected option")
-        axis=col2.selectbox("Specify the axis",['index','columns'])
-        if axis=='index':
-            self.selected_items=["All Rows/Columns"] + list(self.df.index)
+    def access_filtered_data(self, col2):
+        col2.subheader("Pass Input for the selected option", divider='green')
+        
+        axis = col2.selectbox("Specify the axis", ['index', 'columns'])
+        
+        if axis == 'index':
+            self.selected_items = list(self.df.index)
         else:
-            self.selected_items=["All Rows/Columns"]+list(self.df.columns)
-        items=col2.multiselect("Please select the rows or columns",self.selected_items)
-        regex=col2.text_input("You can specify the rezex patterns")
-        like=col2.text_input("Please select the pattern to identify. For example pattern for records that contain rabbit may be 'rab,'rabbit' etc. In simple terms a simple substring")
-        if not like:
-            like=None
-        if not regex:
-            regex=None
-        if col2.button("Fix My Settings For This Filter", use_container_width=True, type='primary'):
+            self.selected_items = list(self.df.columns)
+    
+        filter_option = col2.radio("Choose a filtering method", ["Items", "Like", "Regex"])
+        
+        selected_items, like, regex = None, None, None
+    
+        if filter_option == "Items":
+            selected_items = col2.multiselect("Select specific rows or columns", ["All"] + self.selected_items)
+            if "All" in selected_items:
+                selected_items = None  # Ignore 'All' and select everything
+        elif filter_option == "Like":
+            like = col2.text_input("Enter substring to filter (e.g., 'rab' for 'rabbit')")
+        elif filter_option == "Regex":
+            regex = col2.text_input("Enter regex pattern")
+    
+        if col2.button("Apply Filter", use_container_width=True, type='primary'):
             try:
-                selectedData=self.df.filter(items=items,axis=axis,like=like,regex=regex)
+                if selected_items:
+                    selected_data = self.df.filter(items=selected_items, axis=0 if axis == "index" else 1)
+                elif like:
+                    selected_data = self.df.filter(like=like, axis=0 if axis == "index" else 1)
+                elif regex:
+                    selected_data = self.df.filter(regex=regex, axis=0 if axis == "index" else 1)
+                else:
+                    col2.warning("No valid filtering criteria provided.")
+                    return
+    
+                key = f"Filtered Data - {filter_option} - {selected_items if selected_items else like if like else regex}"
+                st.session_state["allData"][key] = selected_data
+    
+                col2.subheader("Your Results", divider='grey')
+                col2.dataframe(selected_data)
+    
             except Exception as e:
-                col2.warning(e)
-            
+                col2.warning(f"Error: {e}")
+                
