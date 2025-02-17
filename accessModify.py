@@ -163,7 +163,7 @@ class AccessModify:
             self.desired_rows_and_columns(col2)
         if options=="Portion Of Rows And Columns":
             self.portion_rows_and_columns(col2)
-        if options=="Truncate Data":
+        if options=="Trucante Data":
             self.truncate_data(col2)
         if options=="Boolean Conditions":
             self.boolean_conditions(col2)
