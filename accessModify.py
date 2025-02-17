@@ -200,9 +200,9 @@ class AccessModify:
     
     def portion_rows_and_columns(self, col2):
         col2.subheader("Extract a portion of rows first", divider='blue')
-        sample_size = col2.slider("Select sample size", 1, len(self.df))
+        sample_size = col2.slider("Select sample size", 0,1,0.2)
     
-        sample_data = self.df.sample(sample_size)
+        sample_data = self.df.sample(frac=sample_size,axis='columns')
     
         columns_options = col2.selectbox("Type Of Column Selection", ["All Columns", "Specific Columns"])
         if columns_options == "All Columns":
