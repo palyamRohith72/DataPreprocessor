@@ -161,7 +161,7 @@ class AccessModify:
         options=col2.radio("Options",["Desired Rows And Columns","Portion Of Rows And Columns","Trucante Data","Boolean Conditions"])
         if options=="Desired Rows And Columns":
             self.desired_rows_and_columns(col2)
-        if options=="Portion of Rows And Columns":
+        if options=="Portion Of Rows And Columns":
             self.portion_rows_and_columns(col2)
         if options=="Truncate Data":
             self.truncate_data(col2)
@@ -196,8 +196,7 @@ class AccessModify:
             st.session_state["allData"][key] = selected_data
             col2.subheader("Your Results", divider='grey')
             col2.dataframe(selected_data)
-    
-    
+            
     def portion_rows_and_columns(self, col2):
         col2.subheader("Extract a portion of rows first", divider='blue')
         sample_size = col2.slider("Select sample size", 0,1,0.2)
@@ -219,8 +218,7 @@ class AccessModify:
             st.session_state["allData"][key] = selected_data
             col2.subheader("Your Results", divider='grey')
             col2.dataframe(selected_data)
-    
-    
+            
     def truncate_data(self, col2):
         col2.subheader("Truncate Data", divider='blue')
         before_index = col2.text_input("Truncate before index (leave blank for none)", "")
@@ -228,16 +226,15 @@ class AccessModify:
     
         if col2.button("Apply Truncate", use_container_width=True, type='primary'):
             try:
-                selected_data = self.df.truncate(before=before_index if before_index else None, 
-                                                 after=after_index if after_index else None)
+                selected_data = self.df.truncate(before=int(before_index) if before_index.isdigit() else None, 
+                                                 after=int(after_index) if after_index.isdigit() else None)
                 key = f"Stage - Access & Modify (Advanced) = Truncated before {before_index}, after {after_index}"
                 st.session_state["allData"][key] = selected_data
                 col2.subheader("Your Results", divider='grey')
                 col2.dataframe(selected_data)
             except Exception as e:
                 col2.warning(f"Error: {e}")
-    
-    
+
     def boolean_conditions(self, col2):
         col2.subheader("Apply Boolean Conditions", divider='blue')
         column_selected = col2.selectbox("Select a column", list(self.df.columns))
