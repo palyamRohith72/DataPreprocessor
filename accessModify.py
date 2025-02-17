@@ -24,7 +24,7 @@ class AccessModify:
     options=col2.radio("Options were",['Access first n rows','Access last n rows','Access Sample Data',"Access Filetr Data"])
     if options=='Access first n rows':
       col2.subheader("Provide input for selected Option",divider='green')
-      slider=col2.slider("Drag To Select Number Of Rows",1,self.df.shape[0]
+      slider=col2.slider("Drag To Select Number Of Rows",1,self.df.shape[0])
       columns=col2.multiselect("Select the columns",["All Columns"]+self.df.columns)
       if col2.button("Fix My Settings",use_container_width=True,type='primery'):
         if slider and columns:
