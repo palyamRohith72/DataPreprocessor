@@ -156,7 +156,7 @@ class AccessModify:
     
             except Exception as e:
                 col2.warning(f"Error: {e}")
-    def access_data_advanced(col1,col2):
+    def access_data_advanced(self,col2):
         col2.subheader("Please select an option",divider='green')
         options=col2.radio("Options",["Desired Rows And Columns","Portion Of Rows And Columns","Trucante Data","Boolean Conditions"])
         if options=="Desired Rows And Columns":
