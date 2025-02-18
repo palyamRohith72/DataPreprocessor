@@ -7,7 +7,8 @@ class Plots:
         self.data = data
     
     def display(self):
-        tab1, tab2, tab3 = st.tabs(["Perform Operations", "View Operations", "Clear Memory"])
+        st.subheader("Basic Plots",divider='blue')
+        tab1, tab2 = st.tabs(["Basic Plots", "Advanced Plots"])
         
         with tab1:
             col1,col2=st.columns([1,2],border=True)
@@ -71,11 +72,36 @@ class Plots:
                         st.pyplot(fig)
         
         with tab2:
-            st.subheader("View Operations")
-            st.write("Feature under development.")
+            self.advanced_plots(col1,col2)
+    def advanced_plots(self,col1,col2):
+        st.subhader("Advanced Plots",divider='blue')
+        col1,col2=st.columns([1,2],border=True)
+        options=col1.radio("Select options to perform",["Value Counts","Aggregration Operations"])
+        if options=="VAlue Counts":
+            self.value_counts(col1,col2)
+        if options=="Aggregation Operations":
+            self.aggregations(col1,col2)
+    def aggregations(self, col1, col2):
+        col1.subheader("Aggregation Operations")
+        agg_columns = col1.multiselect("Select columns for aggregation", self.data.columns.tolist())
+        agg_funcs = col1.multiselect("Select aggregation functions", ["sum", "mean", "median", "min", "max", "count"])
+        kind = st.selectbox("Select plot type", ["line", "bar", "barh", "hist", "box", "kde", "density", "area", "pie", "scatter", "hexbin"], index=0)
+        plot_button = col1.button("Generate Aggregation Plot")
         
-        with tab3:
-            st.subheader("Clear Memory")
-            if st.button("Clear DataFrame from Memory"):
-                self.data = pd.DataFrame()
-                st.success("Data cleared!")
+        if plot_button and agg_columns and agg_funcs:
+            agg_data = self.data[agg_columns].agg(agg_funcs)
+            fig, ax = plt.subplots()
+            agg_data.plot(kind=kind, ax=ax)
+            col2.pyplot(fig)
+    
+    def value_counts(self, col1, col2):
+        col1.subheader("Value Counts")
+        value_column = col1.selectbox("Select column for value counts", self.data.columns.tolist())
+        kind = st.selectbox("Select plot type", ["line", "bar", "barh", "hist", "box", "kde", "density", "area", "pie", "scatter", "hexbin"], index=0)
+        plot_button = col1.button("Generate Value Counts Plot")
+        
+        if plot_button and value_column:
+            value_counts = self.data[value_column].value_counts()
+            fig, ax = plt.subplots()
+            value_counts.plot(kind=kind, ax=ax)
+            col2.pyplot(fig)
