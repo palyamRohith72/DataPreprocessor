@@ -28,8 +28,8 @@ class MODIFICATIONS:
                 )
                 
                 method_name = operation.lower().replace(" & ", "_").replace(" ", "_")
-               if operation=="Apply":
-                   self.apply(col1,col2)
+                if operation=="Apply":
+                    self.apply(col1,col2)
     
     def apply(self, col1, col2):
         with col2:
