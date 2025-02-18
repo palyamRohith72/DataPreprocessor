@@ -51,7 +51,10 @@ elif options == "Merge & Join":
         compare = Maths(df)
         compare.display()
 elif options == "Mathematical & Statistical":
-    st.write("Feature coming soon: Update DataFrames")
+    if selected_data:
+        df = st.session_state["allData"][selected_data]
+        attributes = Maths(df)
+        attributes.display()
 
 elif options == "Add & Delete":
     if selected_data:
