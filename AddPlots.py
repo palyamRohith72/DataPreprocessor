@@ -77,9 +77,9 @@ class Plots:
         st.subheader("Advanced Plots",divider='blue')
         col1,col2=st.columns([1,2],border=True)
         options=col1.radio("Select options to perform",["Value Counts","Aggregration Operations"])
-        if options=="VAlue Counts":
+        if options=="Value Counts":
             self.value_counts(col1,col2)
-        if options=="Aggregation Operations":
+        if options=="Aggregration Operations":
             self.aggregations(col1,col2)
     def aggregations(self, col1, col2):
         col1.subheader("Aggregation Operations")
