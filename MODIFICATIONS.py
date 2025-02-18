@@ -193,17 +193,17 @@ class MODIFICATIONS:
             # Input for renaming index or columns
             if rename_type == "Index":
                 selected_index = st.multiselect("Select Indexes to Rename", options=self.data.index.tolist(), default=self.data.index.tolist())
-                index_map = st.text_area("Enter Index Mapping comma separetd")
-                if index_map:
-                    index_map=index_map.split(',')
-                    index_mapping={i:j for i,j in zip(selected_index,index_map)}
+                self.index_map = st.text_area("Enter Index Mapping comma separetd")
+                if self.index_map:
+                    self.index_map=index_map.split(',')
+                    self.index_mapping={i:j for i,j in zip(selected_index,index_map)}
     
             elif rename_type == "Columns":
                 selected_columns = st.multiselect("Select Columns to Rename", options=self.data.columns.tolist(), default=self.data.columns.tolist())
                 column_map = st.text_area("Enter Column Mapping comma seperated")
                 if column_map:
                     column_map=column_map.split(',')
-                    column_map={i:j for i,j in zip(selected_columns,column_map)}
+                    self.column_map={i:j for i,j in zip(selected_columns,column_map)}
     
             # Error handling parameter
             errors = st.selectbox("Choose Error Behavior", ["ignore", "raise"], index=0)
@@ -213,9 +213,9 @@ class MODIFICATIONS:
                 try:
                     # Perform renaming based on selection
                     if rename_type == "Index":
-                        renamed_data = self.data.rename(index=index_mapping, errors=errors)
+                        renamed_data = self.data.rename(index=self.index_mapping, errors=errors)
                     elif rename_type == "Columns":
-                        renamed_data = self.data.rename(columns=column_mapping, errors=errors)
+                        renamed_data = self.data.rename(columns=self.column_mapping, errors=errors)
     
                     # Show success message and renamed DataFrame
                     st.success("Rename applied successfully!")
