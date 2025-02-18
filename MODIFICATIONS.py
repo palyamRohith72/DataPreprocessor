@@ -50,7 +50,7 @@ class MODIFICATIONS:
             if self.operation == "Bin Numeric":
                 self.bin_numeric(col1,col2)
             if self.operation == "Clean Names":
-                self.bin_numeric(col1,col2)
+                self.clean_names(col1,col2)
                 
                 
     
