@@ -1,6 +1,6 @@
 import pandas as pd
 import streamlit as st
-from pandasai import *
+from pandasai import PandasAI  # Ensure PandasAI is imported
 from pandasai.llm.openai import OpenAI
 from pandasai.llm.azure_openai import AzureOpenAI
 from pandasai.llm.google_palm import GooglePalm
@@ -33,7 +33,7 @@ class GenerativeAI:
                     prompt = st.text_area("Enter Prompt")
                     if st.button("Submit", use_container_width=True):
                         llm_instance = LLM_CLASSES[llm_choice](api_token=api_key)
-                        pandas_ai = PandasAI(llm_instance, conversational=False)
+                        pandas_ai = PandasAI(llm_instance, conversational=False)  # Now PandasAI is correctly imported
                         response = pandas_ai.run(self.data, prompt=prompt)
         
         with col2:
