@@ -82,11 +82,11 @@ class Plots:
         if options=="Aggregration Operations":
             self.aggregations(col1,col2)
     def aggregations(self, col1, col2):
-        col1.subheader("Aggregation Operations")
-        agg_columns = col1.multiselect("Select columns for aggregation", self.data.columns.tolist())
-        agg_funcs = col1.multiselect("Select aggregation functions", ["sum", "mean", "median", "min", "max", "count"])
-        kind = st.selectbox("Select plot type", ["line", "bar", "barh", "hist", "box", "kde", "density", "area", "pie", "scatter", "hexbin"], index=0)
-        plot_button = col1.button("Generate Aggregation Plot")
+        col2.subheader("Aggregation Operations")
+        agg_columns = col2.multiselect("Select columns for aggregation", self.data.columns.tolist())
+        agg_funcs = col2.multiselect("Select aggregation functions", ["sum", "mean", "median", "min", "max", "count"])
+        kind = col2.selectbox("Select plot type", ["line", "bar", "barh", "hist", "box", "kde", "density", "area", "pie", "scatter", "hexbin"], index=0)
+        plot_button = col2.button("Generate Aggregation Plot")
         
         if plot_button and agg_columns and agg_funcs:
             agg_data = self.data[agg_columns].agg(agg_funcs)
@@ -95,10 +95,10 @@ class Plots:
             col2.pyplot(fig)
     
     def value_counts(self, col1, col2):
-        col1.subheader("Value Counts")
-        value_column = col1.selectbox("Select column for value counts", self.data.columns.tolist())
-        kind = st.selectbox("Select plot type", ["line", "bar", "barh", "hist", "box", "kde", "density", "area", "pie", "scatter", "hexbin"], index=0)
-        plot_button = col1.button("Generate Value Counts Plot")
+        col2.subheader("Value Counts")
+        value_column = col2.selectbox("Select column for value counts", self.data.columns.tolist())
+        kind = col2.selectbox("Select plot type", ["line", "bar", "barh", "hist", "box", "kde", "density", "area", "pie", "scatter", "hexbin"], index=0)
+        plot_button = col2.button("Generate Value Counts Plot")
         
         if plot_button and value_column:
             value_counts = self.data[value_column].value_counts()
