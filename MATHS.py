@@ -101,7 +101,8 @@ class Maths:
             col1.subheader("Select an Operation")
             operations = ["add", "sub", "mul", "div", "floordiv", "mod", "pow", "dot"]
             selected_operation = col1.radio("Operations", operations)
-            getattr(self, selected_operation)()
+            with col2:
+                getattr(self, selected_operation)()
         
         with tab2:
             st.write("### Stored Data from Operations")
