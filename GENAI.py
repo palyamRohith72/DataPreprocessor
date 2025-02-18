@@ -10,9 +10,6 @@ from pandasai.llm.fake import FakeLLM
 LLM_CLASSES = {
     "OpenAI": OpenAI,
     "AzureOpenAI": AzureOpenAI,
-    "HuggingFaceLLM": HuggingFaceLLM,
-    "OpenAssistant": OpenAssistant,
-    "Starcoder": Starcoder,
     "GooglePalm": GooglePalm,
     "FakeLLM": FakeLLM
 }
