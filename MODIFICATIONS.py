@@ -63,10 +63,35 @@ class MODIFICATIONS:
                     st.error(f"Error applying map: {e}")
     
     def aggregate(self, col1, col2):
-        pass
+        with col2:
+            columns = st.multiselect("Select columns to aggregate", self.data.columns.tolist())
+            agg_funcs = st.multiselect("Select aggregation functions", ["sum", "mean", "median", "min", "max", "std", "var", "count"])
+            
+            if st.button("Apply Aggregation", use_container_width=True):
+                try:
+                    aggregated_data = self.data[columns].agg(agg_funcs)
+                    st.success("Aggregation applied successfully!")
+                    st.dataframe(aggregated_data)
+                    key=f"Stage - Modifications - Aggregate - {columns} - {agg_functions}"
+                    st.session_state["allData"][key]=aggregated_data
+                except Exception as e:
+                    st.error(f"Error applying aggregation: {e}")
     
     def group_by(self, col1, col2):
-        pass
+        with col2:
+            group_column = st.selectbox("Select column to group by", self.data.columns.tolist())
+            agg_columns = st.multiselect("Select columns to aggregate", self.data.columns.tolist())
+            agg_funcs = st.multiselect("Select aggregation functions", ["sum", "mean", "median", "min", "max", "std", "var", "count"])
+            
+            if st.button("Apply Group By", use_container_width=True):
+                try:
+                    grouped_data = self.data.groupby(group_column)[agg_columns].agg(agg_funcs)
+                    st.success("Group By applied successfully!")
+                    st.dataframe(grouped_data)
+                    key=f"Stage - Modifications - Group By - {columns} - {agg_columns} - {agg_funcs}"
+                    st.session_state["allData"][key]=grouped_data
+                except Exception as e:
+                    st.error(f"Error applying Group By: {e}")
     
     def sort_values(self, col1, col2):
         pass
