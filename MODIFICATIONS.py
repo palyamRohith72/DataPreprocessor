@@ -44,7 +44,8 @@ class MODIFICATIONS:
                 self.add_suffix(col1,col2)
             if self.operation=="Rename":
                 self.rename(col1,col2)
-                
+            if self.operation == "Set Index":
+                self.set_index(col1,col2)
     
     def apply(self, col1, col2):
         with col2:
@@ -230,7 +231,30 @@ class MODIFICATIONS:
 
     
     def set_index(self, col1, col2):
-        pass
+        with col2:
+            # Select columns to set as the index
+            columns = st.multiselect("Select columns to set as index", self.data.columns.tolist())
+            drop = st.checkbox("Drop columns used as index", value=True)
+            append = st.checkbox("Append to existing index", value=False)
+            verify_integrity = st.checkbox("Verify index integrity (check for duplicates)", value=False)
+    
+            if st.button("Apply Set Index", use_container_width=True):
+                try:
+                    # Apply set_index with the selected parameters
+                    new_data = self.data.set_index(
+                        keys=columns,
+                        drop=drop,
+                        append=append,
+                        verify_integrity=verify_integrity
+                    )
+    
+                    # Save to session state
+                    key = f"Stage - Modifications - set_index - Columns: {columns} - drop: {drop} - append: {append} - inplace: {inplace} - verify_integrity: {verify_integrity}"
+                    st.session_state["allData"][key] = new_data
+    
+                except Exception as e:
+                    st.error(f"Error applying Set Index: {e}")
+
     
     def bin_numeric(self, col1, col2):
         pass
