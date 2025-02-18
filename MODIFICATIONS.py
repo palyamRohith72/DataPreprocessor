@@ -3,6 +3,8 @@ import pandas as pd
 import numpy as np
 import matplotlib.pyplot as plt
 
+if "allData" not in st.session_state:
+    st.session_state["allData"]={}
 class MODIFICATIONS:
     def __init__(self, data):
         self.data = data
