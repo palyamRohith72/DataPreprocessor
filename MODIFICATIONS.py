@@ -144,7 +144,7 @@ class MODIFICATIONS:
                         ascending=ascending,
                         kind=kind,
                         na_position=na_position,
-                        ignore_index=ignore_index
+                        sort_remaining=sort_remaining
                     )
                     st.success("Sort applied successfully!")
                     st.dataframe(sorted_data)
