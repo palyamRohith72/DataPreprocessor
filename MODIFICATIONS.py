@@ -47,7 +47,7 @@ class MODIFICATIONS:
                 self.rename(col1,col2)
             if self.operation == "Set Index":
                 self.set_index(col1,col2)
-            if self.operation=="Bin Numeric":
+            if self.operation == "Bin Numeric":
                 self.bin_numeric(col1,col2)
                 
     
