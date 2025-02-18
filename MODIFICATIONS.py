@@ -18,7 +18,7 @@ class MODIFICATIONS:
             
             with col1:
                 st.subheader("Select Operation")
-                operation = st.radio(
+                self.operation = st.radio(
                     "Choose an operation:",
                     [
                         "Apply", "Apply & Map", "Aggregate", "Group By", "Sort Values", "Sort Index", "Add Suffix", "Add Prefix", 
@@ -26,10 +26,8 @@ class MODIFICATIONS:
                         "Expand Columns", "Factorize Columns"
                     ]
                 )
-                
-                method_name = operation.lower().replace(" & ", "_").replace(" ", "_")
-                if operation=="Apply":
-                    self.apply(col1,col2)
+            if self.operation=="Apply":
+                self.apply(col1,col2)
     
     def apply(self, col1, col2):
         with col2:
