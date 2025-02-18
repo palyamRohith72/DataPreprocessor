@@ -215,7 +215,7 @@ class MODIFICATIONS:
                     if rename_type == "Index":
                         renamed_data = self.data.rename(index=self.index_mapping, errors=errors)
                     elif rename_type == "Columns":
-                        renamed_data = self.data.rename(columns=self.column_mapping, errors=errors)
+                        renamed_data = self.data.rename(columns=self.column_map, errors=errors)
     
                     # Show success message and renamed DataFrame
                     st.success("Rename applied successfully!")
