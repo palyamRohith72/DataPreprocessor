@@ -154,10 +154,30 @@ class MODIFICATIONS:
                     st.error(f"Error applying Sort Values: {e}")
     
     def add_suffix(self, col1, col2):
-        pass
+        with col2:
+            columns = st.multiselect("Select columns for suffix", self.data.columns.tolist())
+            suffix = st.text_input("Enter suffix to add")
+            
+            if st.button("Apply Add Suffix", use_container_width=True):
+                try:
+                    updated_data=self.data
+                    updated_data = updated_data[columns].add_suffix(suffix)
+                    st.success("Suffix added successfully!")
+                    st.dataframe(updated_data)
+                except Exception as e:
+                    st.error(f"Error applying Add Suffix: {e}")
     
     def add_prefix(self, col1, col2):
-        pass
+        with col2:
+            prefix = st.text_input("Enter prefix to add")
+            
+            if st.button("Apply Add Prefix", use_container_width=True):
+                try:
+                    updated_data = self.data.add_prefix(prefix)
+                    st.success("Prefix added successfully!")
+                    st.dataframe(updated_data)
+                except Exception as e:
+                    st.error(f"Error applying Add Prefix: {e}")
     
     def rename(self, col1, col2):
         pass
