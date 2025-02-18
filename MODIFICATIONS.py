@@ -36,6 +36,8 @@ class MODIFICATIONS:
                 self.group_by(col1,col2)
             if self.operation=="Sort Values":
                 self.sort_values(col1,col2)
+            if self.operations=="Sort Index":
+                self.sort_index(col1,col2)
                 
     
     def apply(self, col1, col2):
