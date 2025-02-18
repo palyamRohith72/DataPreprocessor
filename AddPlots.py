@@ -93,6 +93,8 @@ class Plots:
             fig, ax = plt.subplots()
             agg_data.plot(kind=kind, ax=ax)
             col2.pyplot(fig)
+            col2.subheader("This Aggregation DatFrame Is Used To Plot The Plot",divider='grey')
+            col2.dataframe(agg_data)
     
     def value_counts(self, col1, col2):
         col2.subheader("Value Counts")
