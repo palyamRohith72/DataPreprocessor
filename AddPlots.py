@@ -98,7 +98,7 @@ class Plots:
     
     def value_counts(self, col1, col2):
         col2.subheader("Value Counts")
-        value_column = col2.selectbox("Select Column for value counts", self.data.columns.tolist())
+        value_column = col2.multiselect("Select Column for value counts", self.data.columns.tolist())
         kind = col2.selectbox("Select plot Type", ["line", "bar", "barh", "hist", "box", "kde", "density", "area", "pie", "scatter", "hexbin"], index=0)
         plot_button = col2.button("Generate Value Counts Plot")
         
