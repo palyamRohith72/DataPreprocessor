@@ -38,7 +38,7 @@ class MODIFICATIONS:
             if st.button("Apply Function"):
                 try:
                     data=self.data
-                    data[columns] = self.data[columns].apply(eval(lambda_func), axis=axis)
+                    data[f"Apply({columns})"] = self.data[columns].apply(eval(lambda_func), axis=axis)
                     st.success("Function applied successfully!")
                     st.session_state["allData"][f"Stage - Modifications - Apply - {axis} - {columns}"]=data
                     st.dataframe(data)
