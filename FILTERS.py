@@ -18,8 +18,8 @@ class Filters:
             col1.subheader("Please select the operation", divider='blue')
             
             options = col1.radio("Options", [
-                "Is IN", "Where", "Mask", "Query", "Is NA", "Filter Columns Is In",
-                "Filter On", "Filter Date", "Filter String", "Find & Replace"
+                "Is IN", "Where", "Mask", "Query", "Filter Columns Is In",
+                 "Filter Date"
             ])
             
             if options == "Is IN":
