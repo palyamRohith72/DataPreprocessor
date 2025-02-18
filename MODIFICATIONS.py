@@ -53,7 +53,7 @@ class MODIFICATIONS:
                 self.clean_names(col1,col2)
             if self.operation=="Concatenate Columns":
                 self.concatenate_columns(col1,col2)
-            if self.operations == "Expand Columns":
+            if self.operation == "Expand Columns":
                 self.expand_columns(col1,col2)
                 
                 
