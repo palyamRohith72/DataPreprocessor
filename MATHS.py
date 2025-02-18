@@ -115,8 +115,8 @@ class Maths:
                 getattr(self, selected_operation)()
         
         with tab2:
-            st.write("### Stored Data from Operations")
-            st.write(st.session_state.get('allData', {}))
+            st.subheader("Your Data",divider='blue')
+            st.dataframe(self.data)
         
         with tab3:
             if st.button("Clear Memory"):
