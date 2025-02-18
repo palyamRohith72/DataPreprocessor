@@ -8,6 +8,7 @@ from AddDelete import AddDelete
 from AddPlots import Plots
 from MODIFICATIONS import *
 from FILTERS import Filters
+from MATHS import Maths
 # Initialize session state for storing dataframes
 if "allData" not in st.session_state:
     st.session_state["allData"] = {}
@@ -45,9 +46,11 @@ elif options == "Compare DataFrames":
         compare = COMPARE(df)
         compare.display()
 elif options == "Merge & Join":
-    st.write("Feature coming soon: Merge & Join DataFrames")
-
-elif options == "Update DataFrames":
+    if selected_data:
+        df = st.session_state["allData"][selected_data]
+        compare = Maths(df)
+        compare.display()
+elif options == "Mathematical & Statistical":
     st.write("Feature coming soon: Update DataFrames")
 
 elif options == "Add & Delete":
