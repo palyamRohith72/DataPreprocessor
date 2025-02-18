@@ -27,7 +27,7 @@ class Maths:
             start_index = int(col2.number_input("Start Index", 0))
             end_index = int(col2.number_input("End Index", 1))
             if columns and start_index is not None and end_index is not None:
-                if col2.button("Access Dataframe", use_container_width=True):
+                if col2.checkbox("Access Dataframe"):
                     return self.data.loc[start_index:end_index, columns]
             else:
                 col2.info("Please provide all inputs")
