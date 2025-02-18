@@ -127,7 +127,29 @@ class MODIFICATIONS:
                     st.error(f"Error applying Sort Values: {e}")
     
     def sort_index(self, col1, col2):
-        pass
+        with col2:
+            columns = st.multiselect("Select columns to sort by", self.data.columns.tolist())
+            axis = st.selectbox("select axis", [0, 1], index=0)
+            ascending = st.checkbox("sort in ascending order", value=True)
+            kind = st.selectbox("select sorting algorithm", ["quicksort", "mergesort", "heapsort", "stable"], index=0)
+            na_position = st.selectbox("select NaN position", ["last", "first"], index=0)
+            sort_remaining = st.checkbox("sort remaining", value=False)
+            
+            if st.button("Apply Sort Values", use_container_width=True):
+                try:
+                    sorted_data = self.data[columns].sort_index(
+                        axis=axis,
+                        ascending=ascending,
+                        kind=kind,
+                        na_position=na_position,
+                        ignore_index=ignore_index
+                    )
+                    st.success("Sort applied successfully!")
+                    st.dataframe(sorted_data)
+                    key=f"Stage - Modifications - sort_index - Columns : {columns} - axis : {axis} - ascending : {ascending} - kind : {kind} - na_position : {na_position} - ignore_index : {sort_remaining}"
+                    st.sesion_state["allData"][key]=sorted_data
+                except Exception as e:
+                    st.error(f"Error applying Sort Values: {e}")
     
     def add_suffix(self, col1, col2):
         pass
