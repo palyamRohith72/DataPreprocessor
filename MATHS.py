@@ -2,8 +2,8 @@ import streamlit as st
 import pandas as pd
 
 class Maths:
-    def __init__(self):
-        self.data = st.session_state['dataset']
+    def __init__(self,data):
+        self.data =  data
 
     def binary_operation(self, operation):
         """Perform binary operations like add, sub, mul, etc. based on user selection."""
