@@ -36,13 +36,29 @@ class MODIFICATIONS:
             
             if st.button("Apply Function"):
                 data=self.data
-                data[f"Apply({columns})"] = self.data[columns].apply(eval(lambda_func))
+                data[f"Apply({columns})"] = data[columns].apply(eval(lambda_func))
                 st.success("Function applied successfully!")
                 st.session_state["allData"][f"Stage - Modifications - Apply - {axis} - {columns}"]=data
                 st.dataframe(data)
     
     def apply_map(self, col1, col2):
-        pass
+        with col2:
+            column = st.selectbox("Select a column", self.data.columns.tolist())
+            unique_values = self.data[column].unique().tolist()
+            selected_values = st.multiselect("Select values to map", unique_values)
+            mapping_values = st.text_input("Enter mapping values (comma-separated)")
+            
+            if st.button("Apply Map",use_container_width=True):
+                try:
+                    mapping_dict = dict(zip(selected_values, mapping_values.split(',')))
+                    data=self.data
+                    data[column] = data[column].map(mapping_dict)
+                    st.success("Mapping applied successfully!")
+                    st.dataframe(data)
+                    key=f"Stage - Modifications - Map - {column}"
+                    st.session_state["allData"][key]=data
+                except Exception as e:
+                    st.error(f"Error applying map: {e}")
     
     def aggregate(self, col1, col2):
         pass
