@@ -53,6 +53,9 @@ class MODIFICATIONS:
                 self.clean_names(col1,col2)
             if self.operation=="Concatenate Columns":
                 self.concatenate_columns(col1,col2)
+            if self.operations == "Expand Columns":
+                self.expand_columns(col1,col2)
+                
                 
                 
     
@@ -382,7 +385,33 @@ class MODIFICATIONS:
         pass
     
     def expand_columns(self, col1, col2):
-        pass
+        with col2:
+            # Select column to expand
+            column_name = st.selectbox("Select a column to expand", self.data.columns.tolist())
+
+            # Separator input
+            sep = st.text_input("Enter separator (default ', '):", value=", ")
+
+            # Option for concatenating expanded columns with the original DataFrame
+            concat = st.checkbox("Concatenate expanded columns to original DataFrame", value=True)
+
+            if st.button("Apply Expand Column", use_container_width=True):
+                try:
+                    # Apply expand_column method from janitor
+                    expanded_data = self.data.expand_column(
+                        column_name=column_name,
+                        sep=sep,
+                        concat=concat
+                    )
+                    st.success(f"Column '{column_name}' expanded successfully!")
+                    st.dataframe(expanded_data)
+
+                    # Save the modified data to session state
+                    key = f"Stage - Modifications - expand_column - column: {column_name} - sep: {sep} - concat: {concat}"
+                    st.session_state["allData"][key] = expanded_data
+
+                except Exception as e:
+                    st.error(f"Error expanding column: {e}")
     
     def factorize_columns(self, col1, col2):
         pass
