@@ -90,7 +90,7 @@ class Maths:
           return self.other,axis,fill_value
         else:
           col2.info("All Parameters Shoild be selected")
-    def parseFIle(self.file):
+    def parseFIle(file):
       # use chardet module to detect correct encoding and reset pointer read with sucess ful encoding
       raw_data = file.read(10000)
       result = chardet.detect(raw_data)
