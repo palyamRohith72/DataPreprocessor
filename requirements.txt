@@ -9,3 +9,4 @@ chardet
 pyjanitor
 pandasai
 langchain
+langchain-community
