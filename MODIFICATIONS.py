@@ -38,6 +38,10 @@ class MODIFICATIONS:
                 self.sort_values(col1,col2)
             if self.operation=="Sort Index":
                 self.sort_index(col1,col2)
+            if self.operation=="Add Prefix":
+                self.add_prefix(col1,col2)
+            if self.operation=="Add Suffix":
+                self.add_suffix(col1,col2)
                 
     
     def apply(self, col1, col2):
