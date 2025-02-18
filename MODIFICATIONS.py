@@ -55,6 +55,8 @@ class MODIFICATIONS:
                 self.concatenate_columns(col1,col2)
             if self.operation == "Expand Columns":
                 self.expand_columns(col1,col2)
+            if self.operation=="Factorize Columns":
+                self.factorize_columns(col1,col2)
                 
                 
                 
@@ -412,6 +414,33 @@ class MODIFICATIONS:
 
                 except Exception as e:
                     st.error(f"Error expanding column: {e}")
-    
+                    
     def factorize_columns(self, col1, col2):
-        pass
+        with col2:
+            # Select column(s) to factorize
+            column_names = st.multiselect("Select columns to factorize", self.data.columns.tolist())
+
+            # Suffix input
+            suffix = st.text_input("Enter suffix for new column(s) (default '_enc'):", value="_enc")
+
+            # Additional keyword arguments input (optional)
+            size_hint = st.number_input("Enter size_hint (optional)", min_value=1, step=1, value=10)
+            na_sentinel = st.number_input("Enter na_sentinel (optional)", value=-1)
+
+            if st.button("Apply Factorize Columns", use_container_width=True):
+                try:
+                    # Apply factorize_columns method from janitor
+                    factorized_data = self.data.factorize_columns(
+                        column_names=column_names,
+                        suffix=suffix,
+                    )
+                    st.success("Factorization applied successfully!")
+                    st.dataframe(factorized_data)
+
+                    # Save the modified data to session state
+                    key = f"Stage - Modifications - factorize_columns - columns: {column_names} - suffix: {suffix} - size_hint: {size_hint} - na_sentinel: {na_sentinel}"
+                    st.session_state["allData"][key] = factorized_data
+
+                except Exception as e:
+                    st.error(f"Error factorizing columns: {e}")
+
