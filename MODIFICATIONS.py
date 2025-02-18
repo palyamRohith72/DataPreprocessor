@@ -310,8 +310,9 @@ class MODIFICATIONS:
             
             # Input for column names (for specific column cleaning)
             column_names = st.multiselect("Select column names to clean", self.data.columns.tolist())
-            if column_names:
-                column_names = [col.strip() for col in column_names.split(',')]
+            if not column_names:
+                st.info("Please select at lease one column")
+                return " "
 
             # Options for additional cleaning
             strip_underscores = st.selectbox("Remove outer underscores", ['None', 'left', 'right', 'both'], index=0)
