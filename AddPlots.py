@@ -83,9 +83,9 @@ class Plots:
             self.aggregations(col1,col2)
     def aggregations(self, col1, col2):
         col2.subheader("Aggregation Operations")
-        agg_columns = col2.multiselect("Select columns for aggregation", self.data.columns.tolist())
-        agg_funcs = col2.multiselect("Select aggregation functions", ["sum", "mean", "median", "min", "max", "count"])
-        kind = col2.selectbox("Select plot type", ["line", "bar", "barh", "hist", "box", "kde", "density", "area", "pie", "scatter", "hexbin"], index=0)
+        agg_columns = col2.multiselect("Select Columns for aggregation", self.data.columns.tolist())
+        agg_funcs = col2.multiselect("Select Aggregation functions", ["sum", "mean", "median", "min", "max", "count"])
+        kind = col2.selectbox("Select Plot type", ["line", "bar", "barh", "hist", "box", "kde", "density", "area", "pie", "scatter", "hexbin"], index=0)
         plot_button = col2.button("Generate Aggregation Plot")
         
         if plot_button and agg_columns and agg_funcs:
@@ -96,8 +96,8 @@ class Plots:
     
     def value_counts(self, col1, col2):
         col2.subheader("Value Counts")
-        value_column = col2.selectbox("Select column for value counts", self.data.columns.tolist())
-        kind = col2.selectbox("Select plot type", ["line", "bar", "barh", "hist", "box", "kde", "density", "area", "pie", "scatter", "hexbin"], index=0)
+        value_column = col2.selectbox("Select Column for value counts", self.data.columns.tolist())
+        kind = col2.selectbox("Select plot Type", ["line", "bar", "barh", "hist", "box", "kde", "density", "area", "pie", "scatter", "hexbin"], index=0)
         plot_button = col2.button("Generate Value Counts Plot")
         
         if plot_button and value_column:
