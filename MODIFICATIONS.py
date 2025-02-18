@@ -2,6 +2,7 @@ import streamlit as st
 import pandas as pd
 import numpy as np
 import matplotlib.pyplot as plt
+import janitor
 
 if "allData" not in st.session_state:
     st.session_state["allData"]={}
@@ -46,6 +47,9 @@ class MODIFICATIONS:
                 self.rename(col1,col2)
             if self.operation == "Set Index":
                 self.set_index(col1,col2)
+            if self.operation=="Bin Numeric":
+                self.bin_numeric(col1,col2)
+                
     
     def apply(self, col1, col2):
         with col2:
@@ -259,7 +263,42 @@ class MODIFICATIONS:
 
     
     def bin_numeric(self, col1, col2):
-        pass
+        with col2:
+            # Select the column to bin
+            from_column_name = st.selectbox("Select a column to bin", self.data.columns.tolist())
+
+            # Input for the new column name to store binned values
+            to_column_name = st.text_input("Enter new column name for binned data", value=f"{from_column_name}_binned")
+
+            # Input for the bin edges (comma-separated integers)
+            bins_input = st.text_input("Enter bin edges (comma-separated integers)", value="0, 5, 11, 15")
+
+            # Convert bins input into a list of integers
+            try:
+                bins = list(map(int, bins_input.split(',')))
+            except ValueError:
+                st.error("Invalid bin edges input. Please enter valid comma-separated integers.")
+                bins = []
+
+            # Button to apply binning
+            if st.button("Apply Binning", use_container_width=True):
+                try:
+                    if bins:
+                        # Use janitor's bin_numeric function to bin the data
+                        self.data = self.data.bin_numeric(
+                            from_column_name=from_column_name,
+                            to_column_name=to_column_name,
+                            bins=bins,
+                        )
+                        st.success("Binning applied successfully!")
+                        st.dataframe(self.data)
+
+                        # Save the modified data to session state
+                        key = f"Stage - Modifications - bin_numeric - {from_column_name} - bins: {bins}"
+                        st.session_state["allData"][key] = self.data
+
+                except Exception as e:
+                    st.error(f"Error applying binning: {e}")
     
     def clean_names(self, col1, col2):
         pass
