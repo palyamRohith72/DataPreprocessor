@@ -30,9 +30,9 @@ class MODIFICATIONS:
                 self.apply(col1,col2)
             if self.operation == "Apply & Map":
                 self.apply_map(col1,col2)
-            if self.operations == "Aggregate":
+            if self.operation == "Aggregate":
                 self.aggregate(col1,col2)
-            if self.operations=="Group By":
+            if self.operation=="Group By":
                 self.group_by(col1,col2)
                 
     
