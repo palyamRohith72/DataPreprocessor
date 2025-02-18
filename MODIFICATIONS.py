@@ -249,7 +249,7 @@ class MODIFICATIONS:
                     )
     
                     # Save to session state
-                    key = f"Stage - Modifications - set_index - Columns: {columns} - drop: {drop} - append: {append} - inplace: {inplace} - verify_integrity: {verify_integrity}"
+                    key = f"Stage - Modifications - set_index - Columns: {columns} - drop: {drop} - append: {append} - verify_integrity: {verify_integrity}"
                     st.session_state["allData"][key] = new_data
     
                 except Exception as e:
