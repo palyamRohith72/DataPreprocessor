@@ -24,7 +24,7 @@ class Maths:
         start_index=int(col2.number_input("Start Index",1))
         end_index=int(col2.number_input("End Index",1))
         if columns and start_index and end_index:
-          if col2.button("Access Dataframe",use_container-width=True):
+          if col2.button("Access Dataframe",use_container_width=True):
             dataset=self.data[columns].iloc[start_index:end_index,:]
             return dataset
         else:
