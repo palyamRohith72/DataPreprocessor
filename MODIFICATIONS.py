@@ -42,7 +42,7 @@ class MODIFICATIONS:
                     st.success("Function applied successfully!")
                     st.session_state["allData"][f"Stage - Modifications - Apply - {axis} - {columns}"]=data
                     st.dataframe(data)
-                except Exception as e:
+                 except Exception as e:
                     st.error(f"Error applying function: {e}")
     
     def apply_map(self, col1, col2):
