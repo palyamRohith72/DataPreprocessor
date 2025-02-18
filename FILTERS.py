@@ -14,7 +14,7 @@ class Filters:
         tab1, tab2, tab3 = st.tabs(["Perform Operations", "View Data", "Clear Memory"])
         
         with tab1:
-            col1, col2 = st.columns([1, 2], gap="medium")
+            col1, col2 = st.columns([1, 2], gap="medium",border=True)
             col1.subheader("Please select the operation", divider='blue')
             
             options = col1.radio("Options", [
