@@ -1,6 +1,6 @@
 import pandas as pd
 import streamlit as st
-from pandasai import PandasAI
+from pandasai import *
 from pandasai.llm.openai import OpenAI
 from pandasai.llm.azure_openai import AzureOpenAI
 from pandasai.llm.huggingface import HuggingFaceLLM
