@@ -6,6 +6,7 @@ from COMPARE import COMPARE
 from accessModify import *
 from AddDelete import AddDelete
 from AddPlots import Plots
+from MODIFICATIONS import *
 # Initialize session state for storing dataframes
 if "allData" not in st.session_state:
     st.session_state["allData"] = {}
@@ -66,4 +67,9 @@ elif options == "Plot Data":
         df = st.session_state["allData"][selected_data]
         attributes = Plots(df)
         attributes.display()
-
+elif options=="Modifications":
+    if selected_data:
+        df = st.session_state["allData"][selected_data]
+        attributes = MODIFICATIONS(df)
+        attributes.display()
+    
