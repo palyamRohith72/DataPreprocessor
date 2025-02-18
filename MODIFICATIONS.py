@@ -49,6 +49,9 @@ class MODIFICATIONS:
                 self.set_index(col1,col2)
             if self.operation == "Bin Numeric":
                 self.bin_numeric(col1,col2)
+            if self.operation == "Clean Names":
+                self.bin_numeric(col1,col2)
+                
                 
     
     def apply(self, col1, col2):
@@ -301,7 +304,47 @@ class MODIFICATIONS:
                     st.error(f"Error applying binning: {e}")
     
     def clean_names(self, col1, col2):
-        pass
+        with col2:
+            # Option to select axis (columns or index)
+            axis = st.selectbox("Select axis to clean", ['columns', 'index'], index=0)
+            
+            # Input for column names (for specific column cleaning)
+            column_names = st.text_input("Enter column names to clean (comma-separated)", value="")
+            if column_names:
+                column_names = [col.strip() for col in column_names.split(',')]
+
+            # Options for additional cleaning
+            strip_underscores = st.selectbox("Remove outer underscores", ['None', 'left', 'right', 'both'], index=0)
+            case_type = st.selectbox("Convert case", ['lower', 'upper', 'preserve', 'snake'], index=0)
+            remove_special = st.checkbox("Remove special characters", value=False)
+            strip_accents = st.checkbox("Strip accents", value=True)
+            preserve_original_labels = st.checkbox("Preserve original labels", value=True)
+            enforce_string = st.checkbox("Enforce string type for column names/values", value=True)
+            truncate_limit = st.number_input("Truncate column names/values to length", min_value=0, value=0)
+
+            if st.button("Apply Clean Names", use_container_width=True):
+                try:
+                    # Apply clean_names from janitor
+                    self.data = self.data.clean_names(
+                        axis=axis,
+                        column_names=column_names if axis == 'columns' else None,
+                        strip_underscores=strip_underscores if strip_underscores != 'None' else None,
+                        case_type=case_type,
+                        remove_special=remove_special,
+                        strip_accents=strip_accents,
+                        preserve_original_labels=preserve_original_labels,
+                        enforce_string=enforce_string,
+                        truncate_limit=truncate_limit if truncate_limit > 0 else None,
+                    )
+                    st.success("Column names cleaned successfully!")
+                    st.dataframe(self.data)
+
+                    # Save the modified data to session state
+                    key = f"Stage - Modifications - clean_names - axis: {axis} - columns: {column_names} - strip_underscores: {strip_underscores} - case_type: {case_type} - remove_special: {remove_special} - strip_accents: {strip_accents} - preserve_original_labels: {preserve_original_labels} - enforce_string: {enforce_string} - truncate_limit: {truncate_limit}"
+                    st.session_state["allData"][key] = self.data
+
+                except Exception as e:
+                    st.error(f"Error applying clean names: {e}")
     
     def concatenate_columns(self, col1, col2):
         pass
