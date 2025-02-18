@@ -106,13 +106,10 @@ class Maths:
         tab1, tab2, tab3 = st.tabs(["Perform Operations", "View Operations", "Clear Memory"])
         
         with tab1:
-            col1, col2 = st.columns([1, 2], gap="medium")
-            with col1:
-                st.subheader("Select an Operation")
-                operations = ["add", "sub", "mul", "div", "floordiv", "mod", "pow", "dot"]
-                selected_operation = st.radio("Operations", operations)
-            with col2:
-                getattr(self, selected_operation)()
+            st.subheader("Select an Operation")
+            operations = ["add", "sub", "mul", "div", "floordiv", "mod", "pow", "dot"]
+            selected_operation = st.radio("Operations", operations)
+            getattr(self, selected_operation)()
         
         with tab2:
             st.subheader("Your Data",divider='blue')
