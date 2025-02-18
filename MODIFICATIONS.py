@@ -30,7 +30,20 @@ class MODIFICATIONS:
                     getattr(self, method_name)(col1, col2)
     
     def apply(self, col1, col2):
-        pass
+        with col2:
+            columns = st.multiselect("Select columns to apply function", self.data.columns.tolist())
+            lambda_func = st.text_input("Enter lambda function", "lambda x: x")
+            axis = st.selectbox("Select axis", [0, 1], index=0)
+            
+            if st.button("Apply Function"):
+                try:
+                    data=self.data
+                    data[columns] = self.data[columns].apply(eval(lambda_func), axis=axis)
+                    st.success("Function applied successfully!")
+                    st.session_state["allData"][f"Stage - Modifications - Apply - {axis} - {columns}"]=data
+                    st.dataframe(data)
+                    except Exception as e:
+                    st.error(f"Error applying function: {e}")
     
     def apply_map(self, col1, col2):
         pass
