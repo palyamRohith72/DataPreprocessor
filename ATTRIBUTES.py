@@ -39,7 +39,7 @@ class ATTRIBUTES:
             if selected_operation == "DataFrame.index":
                 col2.dataframe(self.dataframe.index)
             elif selected_operation == "DataFrame.columns":
-                col2.dataframe(self.dataframe.columns)
+                col2.write(list(self.dataframe.columns))
             elif selected_operation == "DataFrame.dtypes":
                 col2.dataframe(self.dataframe.dtypes)
             elif selected_operation == "DataFrame.info":
