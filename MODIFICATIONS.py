@@ -26,8 +26,8 @@ class MODIFICATIONS:
                 )
                 
                 method_name = operation.lower().replace(" & ", "_").replace(" ", "_")
-                if hasattr(self, method_name):
-                    getattr(self, method_name)(col1, col2)
+               if options=="Apply":
+                   self.apply(col1,col2)
     
     def apply(self, col1, col2):
         with col2:
