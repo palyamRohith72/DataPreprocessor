@@ -3,7 +3,7 @@ import pandas as pd
 
 class Maths:
     def __init__(self,df):
-        self.data = st.session_state['dataset']
+        self.data = df
 
     def binary_operation(self, operation):
         """Perform binary operations like add, sub, mul, etc. based on user selection."""
