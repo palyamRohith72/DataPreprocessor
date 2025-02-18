@@ -7,6 +7,7 @@ from accessModify import *
 from AddDelete import AddDelete
 from AddPlots import Plots
 from MODIFICATIONS import *
+from FILTERS import Filters
 # Initialize session state for storing dataframes
 if "allData" not in st.session_state:
     st.session_state["allData"] = {}
@@ -72,4 +73,10 @@ elif options=="Modifications":
         df = st.session_state["allData"][selected_data]
         attributes = MODIFICATIONS(df)
         attributes.display()
+elif options=="Filterations":
+    if selected_data:
+        df = st.session_state["allData"][selected_data]
+        attributes = Filters(df)
+        attributes.display()
+    
     
