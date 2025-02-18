@@ -2,8 +2,10 @@ import streamlit as st
 import pandas as pd
 import seaborn as sns
 import janitor
+
 if "allData" not in st.session_state:
-  st.session_state["allData"]={}
+    st.session_state["allData"] = {}
+
 class Filters:
     def __init__(self, data):
         self.data = data
@@ -41,56 +43,78 @@ class Filters:
             elif options == "Find & Replace":
                 self.find_replace(col1, col2)
     
-   def is_in(self, col1, col2):
-      choice = col2.radio("Select Scope", ["Check values in entire data", "Check values in sub data"])
-     
-      if choice == "Check values in entire data":
-          values = col2.text_input("Enter comma-separated values")
-          if values:
-              values_list = [eval(val.strip()) for val in values.split(",")]
-              result = self.data.isin(values_list)
-              col2.dataframe(result)
-      
-      elif choice == "Check values in sub data":
-          col_selection = col2.multiselect("Select columns", ["All"] + list(self.data.columns))
-          row_selection = col2.multiselect("Select rows", ["All"] + list(self.data.index.astype(str)))
-          values = col2.text_input("Enter comma-separated values")
-          
-          if values:
-              values_list = [eval(val.strip()) for val in values.split(",")]
-              selected_data = self.data.copy()
-              
-              if "All" not in col_selection:
-                  selected_data = selected_data[col_selection]
-              if "All" not in row_selection:
-                  selected_data = selected_data.loc[row_selection]
-              
-              result = selected_data.isin(values_list)
-              col2.dataframe(result)
+    def is_in(self, col1, col2):
+        choice = col2.radio("Select Scope", ["Check values in entire data", "Check values in sub data"])
+        
+        if choice == "Check values in entire data":
+            values = col2.text_input("Enter comma-separated values")
+            if values:
+                values_list = [eval(val.strip()) for val in values.split(",")]
+                result = self.data.isin(values_list)
+                col2.dataframe(result)
+                st.session_state["allData"]["Stage - Filters - Is IN - Entire Data"] = result
+        
+        elif choice == "Check values in sub data":
+            col_selection = col2.multiselect("Select columns", ["All"] + list(self.data.columns))
+            row_selection = col2.multiselect("Select rows", ["All"] + list(self.data.index.astype(str)))
+            values = col2.text_input("Enter comma-separated values")
+            
+            if values:
+                values_list = [eval(val.strip()) for val in values.split(",")]
+                selected_data = self.data.copy()
+                
+                if "All" not in col_selection:
+                    selected_data = selected_data[col_selection]
+                if "All" not in row_selection:
+                    selected_data = selected_data.loc[row_selection]
+                
+                result = selected_data.isin(values_list)
+                col2.dataframe(result)
+                key = f"Stage - Filters - Is IN - Sub data - Columns: {col_selection}, Rows: {row_selection}"
+                st.session_state["allData"][key] = result
     
     def where(self, col1, col2):
-        pass
+        condition = col2.text_input("Enter condition for where")
+        other = col2.text_input("Enter replacement value (optional)")
+        
+        if condition:
+            result = self.data.where(self.data.eval(condition), other if other else None)
+            col2.dataframe(result)
+            st.session_state["allData"]["Stage - Filters - Where"] = result
     
     def mask(self, col1, col2):
-        pass
+        condition = col2.text_input("Enter condition for mask")
+        other = col2.text_input("Enter replacement value (optional)")
+        
+        if condition:
+            result = self.data.mask(self.data.eval(condition), other if other else None)
+            col2.dataframe(result)
+            st.session_state["allData"]["Stage - Filters - Mask"] = result
     
     def query(self, col1, col2):
-        pass
-    
-    def is_na(self, col1, col2):
-        pass
+        query_string = col2.text_input("Enter query string")
+        if query_string:
+            result = self.data.query(query_string)
+            col2.dataframe(result)
+            st.session_state["allData"]["Stage - Filters - Query"] = result
     
     def filter_columns(self, col1, col2):
-        pass
-    
-    def filter_on(self, col1, col2):
-        pass
+        column_name = col2.selectbox("Select column to filter", self.data.columns)
+        values = col2.text_input("Enter comma-separated values")
+        complement = col2.checkbox("Complement (Exclude selected values)", value=False)
+        
+        if values:
+            values_list = [eval(val.strip()) for val in values.split(",")]
+            result = self.data.filter_column_isin(column_name=column_name, iterable=values_list, complement=complement)
+            col2.dataframe(result)
+            st.session_state["allData"]["Stage - Filters - Filter Columns"] = result
     
     def filter_date(self, col1, col2):
-        pass
-    
-    def filter_string(self, col1, col2):
-        pass
-    
-    def find_replace(self, col1, col2):
-        pass
+        column_name = col2.selectbox("Select date column", self.data.columns)
+        start_date = col2.date_input("Start Date")
+        end_date = col2.date_input("End Date")
+        
+        if start_date and end_date:
+            result = self.data.filter_date(column_name, start_date=start_date, end_date=end_date)
+            col2.dataframe(result)
+            st.session_state["allData"]["Stage - Filters - Filter Date"] = result
