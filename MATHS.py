@@ -2,7 +2,7 @@ import streamlit as st
 import pandas as pd
 
 class Maths:
-    def __init__(self):
+    def __init__(self,df):
         self.data = st.session_state['dataset']
 
     def binary_operation(self, operation):
