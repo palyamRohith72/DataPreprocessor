@@ -34,6 +34,8 @@ class MODIFICATIONS:
                 self.aggregate(col1,col2)
             if self.operation=="Group By":
                 self.group_by(col1,col2)
+            if self.operation=="Sort Values":
+                self.sort_values(col1,col2)
                 
     
     def apply(self, col1, col2):
@@ -99,7 +101,28 @@ class MODIFICATIONS:
                     st.error(f"Error applying Group By: {e}")
     
     def sort_values(self, col1, col2):
-        pass
+        with col2:
+            columns = st.multiselect("Select columns to sort by", self.data.columns.tolist())
+            axis = st.selectbox("Select axis", [0, 1], index=0)
+            ascending = st.checkbox("Sort in ascending order", value=True)
+            kind = st.selectbox("Select sorting algorithm", ["quicksort", "mergesort", "heapsort", "stable"], index=0)
+            na_position = st.selectbox("Select NaN position", ["last", "first"], index=0)
+            ignore_index = st.checkbox("Ignore index", value=False)
+            
+            if st.button("Apply Sort Values", use_container_width=True):
+                try:
+                    sorted_data = self.data.sort_values(
+                        by=columns if columns else None,
+                        axis=axis,
+                        ascending=ascending,
+                        kind=kind,
+                        na_position=na_position,
+                        ignore_index=ignore_index
+                    )
+                    st.success("Sort applied successfully!")
+                    st.dataframe(sorted_data)
+                except Exception as e:
+                    st.error(f"Error applying Sort Values: {e}")
     
     def sort_index(self, col1, col2):
         pass
