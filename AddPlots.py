@@ -74,7 +74,7 @@ class Plots:
         with tab2:
             self.advanced_plots(col1,col2)
     def advanced_plots(self,col1,col2):
-        st.subhader("Advanced Plots",divider='blue')
+        st.subheader("Advanced Plots",divider='blue')
         col1,col2=st.columns([1,2],border=True)
         options=col1.radio("Select options to perform",["Value Counts","Aggregration Operations"])
         if options=="VAlue Counts":
