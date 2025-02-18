@@ -42,6 +42,8 @@ class MODIFICATIONS:
                 self.add_prefix(col1,col2)
             if self.operation=="Add Suffix":
                 self.add_suffix(col1,col2)
+            if self.operation=="Rename":
+                self.rename(col1,col2)
                 
     
     def apply(self, col1, col2):
@@ -184,7 +186,44 @@ class MODIFICATIONS:
                     st.error(f"Error applying Add Prefix: {e}")
     
     def rename(self, col1, col2):
-        pass
+        with col2:
+            # Select columns or index to rename
+            rename_type = st.radio("Select Type to Rename", ("Index", "Columns"))
+    
+            # Input for renaming index or columns
+            if rename_type == "Index":
+                selected_index = st.multiselect("Select Indexes to Rename", options=self.data.index.tolist(), default=self.data.index.tolist())
+                index_map = st.text_area("Enter Index Mapping (e.g., {0: 'x', 1: 'y'})", value="{0: 'x', 1: 'y', 2: 'z'}")
+    
+            elif rename_type == "Columns":
+                selected_columns = st.multiselect("Select Columns to Rename", options=self.data.columns.tolist(), default=self.data.columns.tolist())
+                column_map = st.text_area("Enter Column Mapping (e.g., {'A': 'a', 'B': 'b'})", value="{'A': 'a', 'B': 'b'}")
+    
+            # Error handling parameter
+            errors = st.selectbox("Choose Error Behavior", ["ignore", "raise"], index=0)
+    
+            # Button to perform renaming operation
+            if st.button("Apply Rename", use_container_width=True):
+                try:
+                    # Perform renaming based on selection
+                    if rename_type == "Index":
+                        index_mapping = eval(index_map)
+                        renamed_data = self.data.rename(index=index_mapping, errors=errors)
+                    elif rename_type == "Columns":
+                        column_mapping = eval(column_map)
+                        renamed_data = self.data.rename(columns=column_mapping, errors=errors)
+    
+                    # Show success message and renamed DataFrame
+                    st.success("Rename applied successfully!")
+                    st.dataframe(renamed_data)
+    
+                    # Save to session state
+                    key = f"Stage - Modifications - rename - {rename_type} : {selected_index if rename_type == 'Index' else selected_columns} - errors : {errors}"
+                    st.session_state["allData"][key] = renamed_data
+    
+                except Exception as e:
+                    st.error(f"Error applying Rename: {e}")
+
     
     def set_index(self, col1, col2):
         pass
