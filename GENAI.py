@@ -40,7 +40,3 @@ class GenerativeAI:
             if response:
                 st.subheader("LLM Response")
                 st.write(response)
-
-# Initialize and display the app
-gen_ai = GenerativeAI(df)
-gen_ai.display()
