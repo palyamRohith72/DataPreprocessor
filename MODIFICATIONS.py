@@ -309,7 +309,7 @@ class MODIFICATIONS:
             axis = st.selectbox("Select axis to clean", ['columns', 'index'], index=0)
             
             # Input for column names (for specific column cleaning)
-            column_names = st.text_input("Enter column names to clean (comma-separated)", value="")
+            column_names = st.multiselect("Select column names to clean", self.data.columns.tolist())
             if column_names:
                 column_names = [col.strip() for col in column_names.split(',')]
 
