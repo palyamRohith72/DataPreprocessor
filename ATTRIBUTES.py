@@ -15,7 +15,7 @@ class ATTRIBUTES:
         tab1, tab2 = st.tabs(["Perform Operation here", "View Result"])
 
         with tab1:
-            col1, col2 = st.columns([1, 2])
+            col1, col2 = st.columns([1, 2],border=True)
 
             # Radio buttons in column 1
             operations = [
@@ -37,20 +37,20 @@ class ATTRIBUTES:
 
             # Display result in column 2
             if selected_operation == "DataFrame.index":
-                col2.write(self.dataframe.index)
+                col2.dataframe(self.dataframe.index)
             elif selected_operation == "DataFrame.columns":
-                col2.write(self.dataframe.columns)
+                col2.dataframe(self.dataframe.columns)
             elif selected_operation == "DataFrame.dtypes":
-                col2.write(self.dataframe.dtypes)
+                col2.dataframe(self.dataframe.dtypes)
             elif selected_operation == "DataFrame.info":
-                col2.write(self.dataframe.info())
+                col2.dataframe(self.dataframe.info())
             elif selected_operation == "DataFrame.select_dtypes":
                 # Display available datatypes in a multiselect
                 available_dtypes = list(self.dataframe.dtypes.unique())
                 selected_dtypes = col2.multiselect("Select datatypes to include:", available_dtypes)
                 if selected_dtypes:
                     filtered_df = self.dataframe.select_dtypes(include=selected_dtypes)
-                    col2.write(filtered_df)
+                    col2.dataframe(filtered_df)
             elif selected_operation == "DataFrame.values":
                 col2.write(self.dataframe.values)
             elif selected_operation == "DataFrame.axes":
