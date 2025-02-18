@@ -213,10 +213,8 @@ class MODIFICATIONS:
                 try:
                     # Perform renaming based on selection
                     if rename_type == "Index":
-                        index_mapping = eval(index_map)
                         renamed_data = self.data.rename(index=index_mapping, errors=errors)
                     elif rename_type == "Columns":
-                        column_mapping = eval(column_map)
                         renamed_data = self.data.rename(columns=column_mapping, errors=errors)
     
                     # Show success message and renamed DataFrame
