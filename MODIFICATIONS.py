@@ -252,7 +252,7 @@ class MODIFICATIONS:
                     key = f"Stage - Modifications - set_index - Columns: {columns} - drop: {drop} - append: {append} - verify_integrity: {verify_integrity}"
                     st.session_state["allData"][key] = new_data
                     st.success("Successfull")
-                    st.datafrme(new_data)
+                    st.dataframe(new_data)
     
                 except Exception as e:
                     st.error(f"Error applying Set Index: {e}")
