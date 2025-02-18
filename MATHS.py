@@ -1,136 +1,113 @@
 import streamlit as st
 import pandas as pd
-import numpy as np
-import chardet
 
 class Maths:
-    def __init__(self, df):
-        self.data = df
-    
-    def display(self):
-        col1, col2 = st.columns([1, 2], gap="medium")
-        col1.subheader("Please select the operations", divider='blue')
-        
-        options = col1.radio("Operations",
-            ["Addition", "Subtraction", "Multiplication", "Division", "Floor Division", "Modulus", "Power",
-             "Absolute Values", "Clip", "Correlation", "Count", "Covariance", "Cummax", "Cummin", "Cumprod", "Cumsum", 
-             "Describe", "Mean", "Median", "Mode", "Variance", "Standard Deviation", "Kurtosis", "Quantile", "Rank", "Skew", "Dot"]
-        )
-        
-        self.process_operation(col1, col2, options)
-    
-    def partial_dataset(self, col2):
-        columns = col2.multiselect("Please select the columns", self.data.columns.tolist())
-        rows = col2.radio("For rows how do you want to select", ["Continuous Rows", "Access through index values"])
-        
-        if rows == "Continuous Rows":
-            start_index = int(col2.number_input("Start Index", 0))
-            end_index = int(col2.number_input("End Index", 1))
-            if columns and start_index is not None and end_index is not None:
-                if col2.checkbox("Access Dataframe"):
-                    return self.data.loc[start_index:end_index, columns]
-            else:
-                col2.info("Please provide all inputs")
-        
-        if rows == "Access through index values":
-            indices = col2.text_input("Write indices of rows ',' separated")
-            if indices and columns:
-                indices = [int(x.strip()) for x in indices.split(',')]
-                if col2.button("Access The Rows", use_container_width=True):
-                    return self.data.loc[indices, columns]
-            else:
-                col2.info("Both columns and rows are required")
-    
-    def process_operation(self, col1, col2, operation):
-        col2.subheader("Perform Operations On", divider='blue')
-        options = col2.radio("Options", ["On complete Data", "On Sub portion Of data"])
-        
-        dataset = self.data if options == "On complete Data" else self.partial_dataset(col2)
-        
-        if dataset is None:
-            return
-        
-        operation_mapping = {
-            "Addition": self.addition,
-            "Subtraction": self.subtraction,
-            "Multiplication": self.multiplication,
-            "Division": self.division,
-            "Floor Division": self.floor_division,
-            "Modulus": self.modulus,
-            "Power": self.power,
-            "Quantile": self.quantile,
-            "Dot": self.dot
-        }
-        
-        if operation in operation_mapping:
-            operation_mapping[operation](col1, col2, dataset)
-    
-    def commonLayout(self, col2):
-        otherOption = col2.selectbox("Do you want to perform binary operation with", ["A scalar value", "Data Frame"])
-        
-        if otherOption == "A scalar value":
-            other = col2.number_input("Please enter a scalar value")
-            axis = col2.selectbox("Select the axis", ["index", "columns"])
-            fill_value = col2.number_input("Fill value for NaN", value=None, placeholder="Leave empty for None")
+    def __init__(self):
+        self.data = st.session_state['dataset']
+
+    def binary_operation(self, operation):
+        """Perform binary operations like add, sub, mul, etc. based on user selection."""
+        st.subheader(f"Perform DataFrame.{operation}()")
+        st.markdown(f"<h4 style='color: blue;'>You are going to perform DataFrame.{operation}()</h4>", unsafe_allow_html=True)
+
+        numeric_data = self.data.select_dtypes(include=['int32', 'int64', 'float32', 'float64'])
+
+        with st.expander(f"{operation.capitalize()} Parameters"):
+            input_method = st.radio("Select Input Method for 'other':", 
+                                     options=['Upload Dataset', 'Enter Single Value', 'Enter List'], 
+                                     key=f"BineryOperators-{operation}-input-method")
             
-            if col2.button("Confirm Parameters"):
-                return other, axis, fill_value if fill_value else None
+            other_eval = None
+            
+            if input_method == 'Upload Dataset':
+                uploaded_file = st.file_uploader("Upload a CSV File", type=["csv"], key=f"BineryOperators-{operation}-upload")
+                if uploaded_file is not None:
+                    other_df = pd.read_csv(uploaded_file)
+                    other_eval = other_df.select_dtypes(include=['int32', 'int64', 'float32', 'float64']).values
+            elif input_method == 'Enter Single Value':
+                other = st.text_input("Enter a single numeric value", key=f"BineryOperators-{operation}-single-value")
+                try:
+                    other_eval = float(other) if other else None
+                except ValueError:
+                    st.error("Please enter a valid numeric value.")
+            elif input_method == 'Enter List':
+                other = st.text_area("Enter a list of values (comma-separated)", key=f"BineryOperators-{operation}-list")
+                if other:
+                    try:
+                        other_eval = [float(x.strip()) for x in other.split(",")]
+                    except ValueError:
+                        st.error("Please enter valid numeric values separated by commas.")
+
+            axis = st.selectbox("Select axis (0 for index, 1 for columns)", [0, 1], index=1, key=f"BineryOperators-{operation}-axis")
+            level = st.text_area("Enter level (optional)", key=f"BineryOperators-{operation}-level", value="None")
+            level_value = eval(level) if level != "None" else None
+            fill_value = st.number_input("Enter fill_value (optional)", key=f"BineryOperators-{operation}-fill-value")
+            fill_value_value = fill_value if fill_value else None
+
+            if st.checkbox(f"Apply {operation}()", key=f"BineryOperators-{operation}-apply"):
+                try:
+                    result = getattr(numeric_data, operation)(other=other_eval, axis=axis, level=level_value, fill_value=fill_value_value)
+                    st.write(f"Resulting DataFrame after {operation} on numeric columns:", result)
+                    st.session_state['allData'][f"Stage - Mathematics - {operation.capitalize()}"] = result
+                except Exception as e:
+                    st.error(f"Error applying {operation}: {e}")
+
+    def add(self):
+        self.binary_operation('add')
+
+    def sub(self):
+        self.binary_operation('sub')
+
+    def mul(self):
+        self.binary_operation('mul')
+
+    def div(self):
+        self.binary_operation('div')
+
+    def floordiv(self):
+        self.binary_operation('floordiv')
+
+    def mod(self):
+        self.binary_operation('mod')
+
+    def pow(self):
+        self.binary_operation('pow')
+
+    def dot(self):
+        """Perform matrix multiplication with DataFrame.dot()"""
+        st.subheader("Perform DataFrame.dot()")
+        st.markdown("<h4 style='color: blue;'>You are going to perform DataFrame.dot()</h4>", unsafe_allow_html=True)
+
+        numeric_data = self.data.select_dtypes(include=['int32', 'int64', 'float32', 'float64'])
+
+        with st.expander("Dot Parameters"):
+            other = st.text_area("Enter 'other' value (DataFrame or Series)", key="BineryOperators-dot-other")
+
+        if st.checkbox("Apply dot()", key="BineryOperators-dot-apply"):
+            other_eval = eval(other) if other else None
+            try:
+                result = numeric_data.dot(other_eval)
+                st.write("Resulting DataFrame after dot multiplication on numeric columns:", result)
+                st.session_state['allData']["Stage - Mathematics - Dot"] = result
+            except Exception as e:
+                st.error(f"Error applying dot: {e}")
+
+    def display(self):
+        st.subheader("Mathematical Operations", divider='blue')
+        tab1, tab2, tab3 = st.tabs(["Perform Operations", "View Operations", "Clear Memory"])
         
-        if otherOption == "Data Frame":
-            uploaded_file = col2.file_uploader("Please upload file", type=['csv', 'xlsx'])
-            if uploaded_file:
-                other = self.parseFile(uploaded_file)
-                axis = col2.selectbox("Select the Axis", ["index", "columns"])
-                fill_value = col2.number_input("Fill value for NaN", value=None, placeholder="Leave empty for None")
-                
-                if col2.button("Confirm Parameters"):
-                    return other, axis, fill_value if fill_value else None
+        with tab1:
+            col1, col2 = st.columns([1, 2], gap="medium")
+            col1.subheader("Select an Operation")
+            operations = ["add", "sub", "mul", "div", "floordiv", "mod", "pow", "dot"]
+            selected_operation = col1.radio("Operations", operations)
+            getattr(self, selected_operation)()
         
-    def parseFile(self, file):
-        raw_data = file.read(10000)
-        result = chardet.detect(raw_data)
-        encoding = result['encoding']
-        file.seek(0)
+        with tab2:
+            st.write("### Stored Data from Operations")
+            st.write(st.session_state.get('allData', {}))
         
-        try:
-            if file.name.endswith('.csv'):
-                return pd.read_csv(file, encoding=encoding)
-            elif file.name.endswith('.xlsx'):
-                return pd.read_excel(file, engine='openpyxl')
-        except Exception as e:
-            st.error(f"Error reading file: {e}")
-            return None
-    
-    def perform_operation(self, col2, data, operation):
-        other, axis, fill_value = self.commonLayout(col2)
-        if other is not None and axis is not None:
-            result = getattr(data, operation)(other=other, axis=axis, fill_value=fill_value)
-            st.session_state.setdefault("allData", {})[f"Stage - Mathematics - {operation}"] = result
-            col2.dataframe(result)
-    
-    def addition(self, col1, col2, data):
-        self.perform_operation(col2, data, "add")
-    
-    def subtraction(self, col1, col2, data):
-        self.perform_operation(col2, data, "sub")
-    
-    def multiplication(self, col1, col2, data):
-        self.perform_operation(col2, data, "mul")
-    
-    def division(self, col1, col2, data):
-        self.perform_operation(col2, data, "truediv")
-    
-    def dot(self, col1, col2, data):
-        self.perform_operation(col2, data, "dot")
-    
-    def floor_division(self, col1, col2, data):
-        self.perform_operation(col2, data, "floordiv")
-    
-    def modulus(self, col1, col2, data):
-        self.perform_operation(col2, data, "mod")
-    
-    def power(self, col1, col2, data):
-        self.perform_operation(col2, data, "pow")
-    
-    def quantile(self, col1, col2, data):
-        self.perform_operation(col2, data, "quantile")
+        with tab3:
+            if st.button("Clear Memory"):
+                st.session_state['allData'] = {}
+                st.success("Memory Cleared!")
