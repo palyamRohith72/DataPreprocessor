@@ -23,7 +23,7 @@ class MODIFICATIONS:
                     "Choose an operation:",
                     [
                         "Apply", "Apply & Map", "Aggregate", "Group By", "Sort Values", "Sort Index", "Add Suffix", "Add Prefix", 
-                        "Rename", "Set Index", "Bin Numeric", "Clean Names", "Concatenate Columns", "Encode Categorical", 
+                        "Rename", "Set Index", "Bin Numeric", "Clean Names", "Concatenate Columns", 
                         "Expand Columns", "Factorize Columns"
                     ]
                 )
