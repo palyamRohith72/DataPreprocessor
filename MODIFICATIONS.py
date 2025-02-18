@@ -77,7 +77,7 @@ class MODIFICATIONS:
                     aggregated_data = self.data[columns].agg(agg_funcs)
                     st.success("Aggregation applied successfully!")
                     st.dataframe(aggregated_data)
-                    key=f"Stage - Modifications - Aggregate - {columns} - {agg_functions}"
+                    key=f"Stage - Modifications - Aggregate - {columns} - {agg_funcs}"
                     st.session_state["allData"][key]=aggregated_data
                 except Exception as e:
                     st.error(f"Error applying aggregation: {e}")
@@ -93,7 +93,7 @@ class MODIFICATIONS:
                     grouped_data = self.data.groupby(group_column)[agg_columns].agg(agg_funcs)
                     st.success("Group By applied successfully!")
                     st.dataframe(grouped_data)
-                    key=f"Stage - Modifications - Group By - {columns} - {agg_columns} - {agg_funcs}"
+                    key=f"Stage - Modifications - Group By - {group_column} - {agg_columns} - {agg_funcs}"
                     st.session_state["allData"][key]=grouped_data
                 except Exception as e:
                     st.error(f"Error applying Group By: {e}")
