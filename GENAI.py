@@ -3,7 +3,6 @@ import streamlit as st
 from pandasai import *
 from pandasai.llm.openai import OpenAI
 from pandasai.llm.azure_openai import AzureOpenAI
-from pandasai.llm.huggingface import HuggingFaceLLM
 from pandasai.llm.open_assistant import OpenAssistant
 from pandasai.llm.starcoder import Starcoder
 from pandasai.llm.google_palm import GooglePalm
