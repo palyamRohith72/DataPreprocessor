@@ -51,6 +51,8 @@ class MODIFICATIONS:
                 self.bin_numeric(col1,col2)
             if self.operation == "Clean Names":
                 self.clean_names(col1,col2)
+            if self.operation=="Concatenate Columns":
+                self.concatenate_columns(col1,col2)
                 
                 
     
@@ -348,7 +350,33 @@ class MODIFICATIONS:
                     st.error(f"Error applying clean names: {e}")
     
     def concatenate_columns(self, col1, col2):
-        pass
+        with col2:
+            # Select columns to concatenate
+            column_names = st.multiselect("Select columns to concatenate", self.data.columns.tolist())
+            new_column_name = st.text_input("Enter the new column name", value="new_column")
+
+            # Options for separator and handling empty values
+            sep = st.text_input("Enter separator (default '-'): ", value="-")
+            ignore_empty = st.checkbox("Ignore empty values (NaN)", value=True)
+
+            if st.button("Apply Concatenate Columns", use_container_width=True):
+                try:
+                    # Apply concatenate_columns from janitor
+                    self.data = self.data.concatenate_columns(
+                        column_names=column_names,
+                        new_column_name=new_column_name,
+                        sep=sep,
+                        ignore_empty=ignore_empty
+                    )
+                    st.success(f"Columns concatenated successfully into '{new_column_name}'!")
+                    st.dataframe(self.data)
+
+                    # Save the modified data to session state
+                    key = f"Stage - Modifications - concatenate_columns - columns: {column_names} - new_column_name: {new_column_name} - sep: {sep} - ignore_empty: {ignore_empty}"
+                    st.session_state["allData"][key] = self.data
+
+                except Exception as e:
+                    st.error(f"Error applying concatenate columns: {e}")
     
     def encode_categorical(self, col1, col2):
         pass
