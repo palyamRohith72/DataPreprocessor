@@ -149,7 +149,7 @@ class MODIFICATIONS:
                     st.success("Sort applied successfully!")
                     st.dataframe(sorted_data)
                     key=f"Stage - Modifications - sort_index - Columns : {columns} - axis : {axis} - ascending : {ascending} - kind : {kind} - na_position : {na_position} - ignore_index : {sort_remaining}"
-                    st.sesion_state["allData"][key]=sorted_data
+                    st.session_state["allData"][key]=sorted_data
                 except Exception as e:
                     st.error(f"Error applying Sort Values: {e}")
     
