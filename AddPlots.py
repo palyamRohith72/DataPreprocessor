@@ -105,3 +105,5 @@ class Plots:
             fig, ax = plt.subplots()
             value_counts.plot(kind=kind, ax=ax)
             col2.pyplot(fig)
+            col2.subheader("This Is The DataFrame Used To Plot")
+            col2.dataframe(value_counts)
