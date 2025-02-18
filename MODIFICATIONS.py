@@ -422,11 +422,6 @@ class MODIFICATIONS:
 
             # Suffix input
             suffix = st.text_input("Enter suffix for new column(s) (default '_enc'):", value="_enc")
-
-            # Additional keyword arguments input (optional)
-            size_hint = st.number_input("Enter size_hint (optional)", min_value=1, step=1, value=10)
-            na_sentinel = st.number_input("Enter na_sentinel (optional)", value=-1)
-
             if st.button("Apply Factorize Columns", use_container_width=True):
                 try:
                     # Apply factorize_columns method from janitor
