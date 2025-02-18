@@ -8,3 +8,4 @@ streamlit-extras
 chardet
 pyjanitor
 pandasai
+langchain
