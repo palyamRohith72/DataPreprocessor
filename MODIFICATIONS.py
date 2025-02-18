@@ -33,7 +33,6 @@ class MODIFICATIONS:
         with col2:
             columns = st.multiselect("Select columns to apply function", self.data.columns.tolist())
             lambda_func = st.text_input("Enter lambda function", "lambda x: x")
-            axis = st.selectbox("Select axis", [0, 1], index=0)
             
             if st.button("Apply Function"):
                 data=self.data
