@@ -28,6 +28,8 @@ class MODIFICATIONS:
                 )
             if self.operation=="Apply":
                 self.apply(col1,col2)
+            if self.operation == "Apply & Map":
+                self.apply_map(col1,col2)
     
     def apply(self, col1, col2):
         with col2:
